@@ -4,13 +4,14 @@ const LoadingSpinner = () => {
       <div className="animate-spin-slow relative w-16 h-16">
         <div className="star absolute inset-0"></div>
       </div>
-      <style jsx>{`
+      <style>{`
         .star {
-          background: 
-            conic-gradient(from 0deg at 50% 50%, 
-              rgba(123, 97, 255, 0) 0deg, 
-              rgba(123, 97, 255, 0.5) 180deg, 
-              rgba(123, 97, 255, 0) 360deg);
+          background: conic-gradient(
+            from 0deg at 50% 50%, 
+            rgba(123, 97, 255, 0) 0deg, 
+            rgba(123, 97, 255, 0.5) 180deg, 
+            rgba(123, 97, 255, 0) 360deg
+          );
           clip-path: polygon(
             50% 0%, 61% 35%, 98% 35%, 68% 57%,
             79% 91%, 50% 70%, 21% 91%, 32% 57%,

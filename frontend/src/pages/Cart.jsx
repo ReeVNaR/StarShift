@@ -64,11 +64,7 @@ const Cart = () => {
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className={`text-3xl font-bold mb-8 ${theme.text}`}>Your Cart</h1>
-        {loading ? (
-          <div className="flex items-center justify-center h-48">
-            <LoadingSpinner />
-          </div>
-        ) : cartItems?.length === 0 ? (
+        {!cartItems ? (
           <div className={`${theme.secondary} rounded-lg p-8 text-center ${theme.border}`}>
             <p className="text-white mb-4">Your cart is empty</p>
             <Link 

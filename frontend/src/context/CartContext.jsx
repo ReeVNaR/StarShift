@@ -8,33 +8,34 @@ export const CartProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchCart = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setLoading(false);
-      setCartItems([]);
-      return;
-    }
-
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setLoading(false);
+        setCartItems([]);
+        return;
+      }
+
       const { data } = await axios.get('http://localhost:5000/cart', {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      // Ensure we have properly populated product data
-      if (data.cart?.items?.length > 0) {
-        const populatedItems = data.cart.items.filter(item => item.productId);
-        setCartItems(populatedItems);
-      } else {
-        setCartItems([]);
+      // Better error and data validation
+      if (!data || !data.cart) {
+        throw new Error('Invalid cart data received');
       }
+
+      const validItems = data.cart.items?.filter(item => 
+        item && item.productId && typeof item.quantity === 'number'
+      ) || [];
+
+      setCartItems(validItems);
     } catch (error) {
       console.error('Cart fetch error:', error);
-      if (error.response?.status === 401) {
-        localStorage.removeItem('token');
-      }
       setCartItems([]);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const addToCart = async (productId, quantity = 1) => {
