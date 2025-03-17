@@ -3,6 +3,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Cart = () => {
   const theme = useTheme();
@@ -15,18 +16,30 @@ const Cart = () => {
       navigate('/signin');
       return;
     }
-    
+
     const loadCart = async () => {
       try {
         await fetchCart();
       } catch (error) {
+        console.error('Cart load error:', error);
         if (error.response?.status === 401) {
+          localStorage.removeItem('token');
           navigate('/signin');
         }
       }
     };
-    
+
     loadCart();
+
+    // Add event listener for token changes
+    const handleStorageChange = (e) => {
+      if (e.key === 'token' && !e.newValue) {
+        navigate('/signin');
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, [navigate, fetchCart]);
 
   const total = cartItems?.reduce((sum, item) => {
@@ -40,7 +53,7 @@ const Cart = () => {
       <div className={`min-h-screen bg-gradient-to-br ${theme.primary}`}>
         <Navbar />
         <div className="flex justify-center items-center h-[calc(100vh-4rem)]">
-          <div className="text-white">Loading...</div>
+          <LoadingSpinner />
         </div>
       </div>
     );
@@ -52,7 +65,9 @@ const Cart = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className={`text-3xl font-bold mb-8 ${theme.text}`}>Your Cart</h1>
         {loading ? (
-          <div className="text-white text-center">Loading...</div>
+          <div className="flex items-center justify-center h-48">
+            <LoadingSpinner />
+          </div>
         ) : cartItems?.length === 0 ? (
           <div className={`${theme.secondary} rounded-lg p-8 text-center ${theme.border}`}>
             <p className="text-white mb-4">Your cart is empty</p>

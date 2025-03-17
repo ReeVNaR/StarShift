@@ -19,14 +19,20 @@ export const CartProvider = ({ children }) => {
       const { data } = await axios.get('http://localhost:5000/cart', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      if (data.cart?.items) {
-        setCartItems(data.cart.items);
-      }
-    } catch (error) {
-      if (error.response?.status === 401) {
-        localStorage.removeItem('token');
+      
+      // Ensure we have properly populated product data
+      if (data.cart?.items?.length > 0) {
+        const populatedItems = data.cart.items.filter(item => item.productId);
+        setCartItems(populatedItems);
+      } else {
         setCartItems([]);
       }
+    } catch (error) {
+      console.error('Cart fetch error:', error);
+      if (error.response?.status === 401) {
+        localStorage.removeItem('token');
+      }
+      setCartItems([]);
     }
     setLoading(false);
   };
@@ -75,12 +81,13 @@ export const CartProvider = ({ children }) => {
 
   // Listen for token changes
   useEffect(() => {
-    const handleStorageChange = () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        fetchCart();
-      } else {
-        setCartItems([]);
+    const handleStorageChange = (e) => {
+      if (e.key === 'token') {
+        if (e.newValue) {
+          fetchCart();
+        } else {
+          setCartItems([]);
+        }
       }
     };
 

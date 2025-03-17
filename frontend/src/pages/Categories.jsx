@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useTheme } from "../context/ThemeContext";
 import { useCart } from '../context/CartContext';
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Categories = () => {
   const [categorizedProducts, setCategorizedProducts] = useState({});
@@ -53,7 +54,9 @@ const Categories = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className={`text-3xl font-bold mb-8 ${theme.text}`}>Categories</h1>
         {loading ? (
-          <div className="text-white text-center">Loading...</div>
+          <div className="flex items-center justify-center h-48">
+            <LoadingSpinner />
+          </div>
         ) : (
           <div className="space-y-12">
             {sortedCategories.map(([category, products]) => (

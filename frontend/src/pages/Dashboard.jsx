@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import ProductGrid from "../components/ProductGrid";
 import Hero from "../components/Hero";
 import { useTheme } from "../context/ThemeContext";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Dashboard = () => {
   const [products, setProducts] = useState([]);
@@ -34,17 +35,25 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${theme.primary}`}>
+    <div className={`h-screen flex flex-col overflow-hidden bg-gradient-to-br ${theme.primary}`}>
       <Navbar />
-      <Hero />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h2 className={`text-2xl font-bold mb-6 ${theme.text}`}>Featured Products</h2>
-        {loading ? (
-          <div className="flex justify-center text-white">Loading...</div>
-        ) : (
-          <ProductGrid products={products} />
-        )}
-      </main>
+      <div className="flex-1 flex flex-col">
+        <div className="flex-shrink-0">
+          <Hero />
+        </div>
+        <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <h2 className={`text-xl font-bold mb-4 ${theme.text}`}>Featured Products</h2>
+          {loading ? (
+            <div className="flex items-center justify-center h-48">
+              <LoadingSpinner />
+            </div>
+          ) : (
+            <div className="h-full">
+              <ProductGrid products={products} />
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   );
 };

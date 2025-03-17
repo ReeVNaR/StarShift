@@ -4,6 +4,7 @@ import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState(null);
@@ -60,7 +61,9 @@ const ProductDetail = () => {
   if (loading) return (
     <div className={`min-h-screen bg-gradient-to-br ${theme.primary}`}>
       <Navbar />
-      <div className="text-white text-center mt-10">Loading...</div>
+      <div className="flex justify-center items-center h-[calc(100vh-4rem)]">
+        <LoadingSpinner />
+      </div>
     </div>
   );
 

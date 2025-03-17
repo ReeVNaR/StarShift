@@ -4,6 +4,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import { useTheme } from "../context/ThemeContext";
 import { useCart } from '../context/CartContext';
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -66,7 +67,9 @@ const Products = () => {
           {category ? `${category.charAt(0).toUpperCase() + category.slice(1)} Products` : 'All Products'}
         </h1>
         {loading ? (
-          <div className="text-white text-center">Loading...</div>
+          <div className="flex items-center justify-center h-48">
+            <LoadingSpinner />
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((product) => (
