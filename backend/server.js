@@ -8,7 +8,12 @@ import jwt from "jsonwebtoken";
 dotenv.config();
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:3001'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
@@ -46,115 +51,6 @@ const cartSchema = new mongoose.Schema({
 });
 
 const Cart = mongoose.model("Cart", cartSchema);
-
-// Sample Products Data
-const sampleProducts = [
-  {
-    name: "RGB Gaming Mousepad",
-    price: 29.99,
-    image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&q=80&w=500",
-    description: "XL RGB gaming mousepad with 7 lighting modes",
-    category: "gaming"
-  },
-  {
-    name: "Wireless Gamepad",
-    price: 59.99,
-    image: "https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?auto=format&fit=crop&q=80&w=500",
-    description: "Professional gaming controller with vibration feedback",
-    category: "gaming"  // Changed from accessories to gaming
-  },
-  {
-    name: "Gaming T-Shirt Black",
-    price: 24.99,
-    image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&q=80&w=500",
-    description: "Comfortable black gaming t-shirt with cool design",
-    category: "apparel"
-  },
-  {
-    name: "Gaming T-Shirt White",
-    price: 24.99,
-    image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&q=80&w=500",
-    description: "Classic white gaming t-shirt with RGB logo",
-    category: "apparel"
-  },
-  {
-    name: "Gaming Mouse",
-    price: 49.99,
-    image: "https://images.unsplash.com/photo-1586349906319-47f6647f9d5d?auto=format&fit=crop&q=80&w=500",
-    description: "Ergonomic gaming mouse with 16000 DPI sensor",
-    category: "gaming"  // Changed from accessories to gaming
-  },
-  {
-    name: "Custom Phone Case",
-    price: 19.99,
-    image: "https://images.unsplash.com/photo-1601593346740-925612772716?auto=format&fit=crop&q=80&w=500",
-    description: "Gaming-themed phone case with shock protection",
-    category: "accessories"
-  },
-  {
-    name: "Gaming Keyboard",
-    price: 89.99,
-    image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&q=80&w=500",
-    description: "RGB Mechanical Gaming Keyboard with Blue Switches",
-    category: "accessories"
-  },
-  {
-    name: "Gaming Headset",
-    price: 79.99,
-    image: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=500",
-    description: "7.1 Surround Sound Gaming Headset with Noise Cancelling",
-    category: "accessories"
-  },
-  {
-    name: "Gaming Chair",
-    price: 199.99,
-    image: "https://images.unsplash.com/photo-1598550476439-6847785fcea6?auto=format&fit=crop&q=80&w=500",
-    description: "Ergonomic Gaming Chair with Lumbar Support",
-    category: "furniture"
-  },
-  {
-    name: "Gaming Desk",
-    price: 159.99,
-    image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&q=80&w=500",
-    description: "LED Gaming Desk with Controller Stand",
-    category: "furniture"
-  },
-  {
-    name: "Gaming Monitor",
-    price: 299.99,
-    image: "https://images.unsplash.com/photo-1555626906-fcf10d6851b4?auto=format&fit=crop&q=80&w=500",
-    description: "27-inch 144Hz Gaming Monitor with HDR Support",
-    category: "accessories"
-  },
-  {
-    name: "Gaming Backpack",
-    price: 49.99,
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=500",
-    description: "Water-resistant Gaming Laptop Backpack with RGB",
-    category: "accessories"
-  },
-  {
-    name: "Gaming Hoodie",
-    price: 39.99,
-    image: "https://images.unsplash.com/photo-1578269174936-2709b6aeb913?auto=format&fit=crop&q=80&w=500",
-    description: "Comfortable Gaming Hoodie with LED Design",
-    category: "apparel"
-  },
-  {
-    name: "Gaming Speaker Set",
-    price: 129.99,
-    image: "https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&q=80&w=500",
-    description: "2.1 Channel Gaming Speakers with RGB Lighting",
-    category: "accessories"
-  },
-  {
-    name: "Gaming Laptop Stand",
-    price: 29.99,
-    image: "https://images.unsplash.com/photo-1586105251261-72a756497a11?auto=format&fit=crop&q=80&w=500",
-    description: "Adjustable Laptop Stand with Cooling Fan",
-    category: "furniture"
-  }
-];
 
 // 📝 Register Route
 app.post("/signup", async (req, res) => {
@@ -214,19 +110,16 @@ app.get("/products", async (req, res) => {
   try {
     const { category } = req.query;
     const query = category ? { category } : {};
-    let products = await Product.find(query);
+    const products = await Product.find(query);
     
-    // If no products exist at all, seed the database
     if (!products || products.length === 0) {
-      await Product.deleteMany({}); // Clear existing products
-      await Product.insertMany(sampleProducts);
-      products = await Product.find(query);
+      return res.status(404).json({ message: "No products found", products: [] });
     }
-
+    
     res.json({ products });
   } catch (error) {
     console.error('Error fetching products:', error);
-    res.status(500).json({ message: "Error fetching products", error });
+    res.status(500).json({ message: "Error fetching products", error: error.message });
   }
 });
 
@@ -248,14 +141,96 @@ app.get("/products/:id", async (req, res) => {
   }
 });
 
-// Seed Products Route
-app.post("/seed-products", async (req, res) => {
+// Create Product Route
+app.post("/products", async (req, res) => {
   try {
-    await Product.deleteMany({}); // Clear existing products
-    await Product.insertMany(sampleProducts);
-    res.json({ message: "Products seeded successfully!" });
+    const productData = req.body;
+    const sanitizedData = {
+      name: productData.name,
+      price: Number(productData.price),
+      image: productData.image,
+      description: productData.description,
+      category: productData.category
+    };
+
+    const newProduct = new Product(sanitizedData);
+    const savedProduct = await newProduct.save();
+    
+    res.status(201).json({ 
+      message: "Product created successfully", 
+      product: savedProduct 
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error seeding products", error });
+    console.error('Error creating product:', error);
+    res.status(500).json({ 
+      message: "Error creating product", 
+      error: error.message 
+    });
+  }
+});
+
+// Update Product Route
+app.put("/products/:id", async (req, res) => {
+  try {
+    console.log('Update request received:', req.params.id, req.body);
+    
+    const updates = req.body;
+    const productId = req.params.id;
+
+    // Ensure all fields are properly formatted
+    const sanitizedUpdates = {
+      name: updates.name,
+      price: Number(updates.price),
+      image: updates.image,
+      description: updates.description,
+      category: updates.category
+    };
+
+    console.log('Sanitized updates:', sanitizedUpdates);
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      sanitizedUpdates,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedProduct) {
+      console.log('Product not found');
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    console.log('Product updated:', updatedProduct);
+    res.json({ product: updatedProduct });
+  } catch (error) {
+    console.error('Error updating product:', error);
+    res.status(500).json({ 
+      message: "Error updating product", 
+      error: error.message 
+    });
+  }
+});
+
+// Delete Product Route
+app.delete("/products/:id", async (req, res) => {
+  try {
+    console.log('Delete request received for product:', req.params.id);
+    
+    const productId = req.params.id;
+    const deletedProduct = await Product.findByIdAndDelete(productId);
+
+    if (!deletedProduct) {
+      console.log('Product not found');
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    console.log('Product deleted:', deletedProduct);
+    res.json({ message: "Product deleted successfully", product: deletedProduct });
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    res.status(500).json({ 
+      message: "Error deleting product", 
+      error: error.message 
+    });
   }
 });
 
@@ -328,6 +303,18 @@ app.delete("/cart/remove/:productId", async (req, res) => {
     res.status(500).json({ message: "Error removing from cart", error });
   }
 }); 
+
+// Seed Products Route
+app.post("/seed-products", async (req, res) => {
+  try {
+    // Clear existing products
+    await Product.deleteMany({});
+    res.json({ message: "All products cleared successfully" });
+  } catch (error) {
+    console.error("Error clearing products:", error);
+    res.status(500).json({ message: "Error clearing products", error: error.message });
+  }
+});
 
 // Start Server
 const PORT = process.env.PORT || 5000;

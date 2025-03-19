@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const Hero = () => {
   return (
     <div className="bg-black">
-      <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto pt-8 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h1 
             className="text-4xl sm:text-5xl md:text-6xl tracking-wider relative"

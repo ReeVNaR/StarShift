@@ -14,16 +14,14 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // Ensure products are seeded first
-        await axios.post("http://localhost:5000/seed-products");
-        
-        // Then fetch products
         const response = await axios.get("http://localhost:5000/products");
-        console.log('Dashboard products:', response.data);
-        // Get random products for featured section
-        const allProducts = response.data.products;
-        const shuffled = [...allProducts].sort(() => 0.5 - Math.random());
-        setProducts(shuffled.slice(0, 4)); // Only take 4 products
+        if (response.data.products && response.data.products.length > 0) {
+          const shuffled = [...response.data.products].sort(() => 0.5 - Math.random());
+          setProducts(shuffled.slice(0, 4));
+        } else {
+          console.warn('No products returned from API');
+          setProducts([]);
+        }
         setLoading(false);
       } catch (error) {
         console.error('Error fetching products:', error);

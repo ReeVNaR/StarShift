@@ -19,17 +19,17 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // First ensure products are seeded
-        await axios.post("http://localhost:5000/seed-products");
-        
-        // Then fetch products
         const url = category 
           ? `http://localhost:5000/products?category=${category}`
           : "http://localhost:5000/products";
         
         const response = await axios.get(url);
-        console.log('Products fetched:', response.data);
-        setProducts(response.data.products);
+        
+        if (response.data.products) {
+          setProducts(response.data.products);
+        } else {
+          setProducts([]);
+        }
         setLoading(false);
       } catch (err) {
         console.error('Error:', err);
