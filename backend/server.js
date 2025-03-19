@@ -304,17 +304,6 @@ app.delete("/cart/remove/:productId", async (req, res) => {
   }
 }); 
 
-// Seed Products Route
-app.post("/seed-products", async (req, res) => {
-  try {
-    // Clear existing products
-    await Product.deleteMany({});
-    res.json({ message: "All products cleared successfully" });
-  } catch (error) {
-    console.error("Error clearing products:", error);
-    res.status(500).json({ message: "Error clearing products", error: error.message });
-  }
-});
 
 // Start Server
 const PORT = process.env.PORT || 5000;
