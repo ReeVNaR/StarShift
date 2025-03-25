@@ -1,4 +1,4 @@
- import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTheme } from '../context/ThemeContext';
 import Navbar from '../components/Navbar';
@@ -67,64 +67,51 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="h-screen bg-black overflow-hidden">
       <Navbar />
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-zinc-900 rounded-lg shadow-xl p-6 border border-zinc-800">
-          <div className="space-y-6">
-            {/* User Banner with Centered Content */}
-            <div className="relative">
-              <div className="h-32 bg-zinc-800 rounded-t-lg"></div>
-              <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
-                <div className="w-32 h-32 rounded-full bg-blue-600 border-8 border-zinc-900 flex items-center justify-center text-white text-4xl font-bold">
-                  {user?.username?.[0]?.toUpperCase()}
-                </div>
+      <div className="h-[calc(100vh-64px)] flex items-center justify-center px-6">
+        <div className="w-full max-w-4xl bg-zinc-900 rounded-lg shadow-xl border border-zinc-800">
+          <div className="relative p-8">
+            {/* Profile Header */}
+            <div className="flex items-center space-x-8 mb-8">
+              <div className="w-28 h-28 rounded-full bg-blue-600 flex items-center justify-center text-white text-4xl font-bold animate-pulse-glow">
+                {user?.username?.[0]?.toUpperCase()}
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold text-white mb-2">{user?.username}</h2>
+                <p className="text-zinc-400 text-lg">{user?.email}</p>
               </div>
             </div>
 
-            {/* Centered User Info */}
-            <div className="pt-20 text-center">
-              <h2 className="text-3xl font-bold text-white mb-2">{user?.username}</h2>
-              <p className="text-zinc-400 text-lg">{user?.email}</p>
-            </div>
-
-            {/* User Details */}
-            <div className="mt-8 space-y-4 p-6 bg-black rounded-lg">
-              <p className="text-zinc-500 text-sm uppercase mb-4">Account Details</p>
-              <div className="space-y-6">
-                <div>
-                  <p className="text-zinc-500 text-xs">USERNAME</p>
-                  <p className="text-white font-medium mt-1">{user?.username}</p>
-                </div>
-                <div>
-                  <p className="text-zinc-500 text-xs">EMAIL</p>
-                  <p className="text-white font-medium mt-1">{user?.email}</p>
-                </div>
-                <div>
-                  <p className="text-zinc-500 text-xs">MEMBER SINCE</p>
-                  <p className="text-white font-medium mt-1">
-                    {new Date(user?.createdAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </p>
-                </div>
+            {/* Account Details */}
+            <div className="grid grid-cols-2 gap-8 bg-black rounded-lg p-6 mb-6">
+              <div>
+                <p className="text-zinc-500 text-sm mb-2">USERNAME</p>
+                <p className="text-white font-medium text-lg">{user?.username}</p>
+              </div>
+              <div>
+                <p className="text-zinc-500 text-sm mb-2">EMAIL</p>
+                <p className="text-white font-medium text-lg">{user?.email}</p>
+              </div>
+              <div>
+                <p className="text-zinc-500 text-sm mb-2">MEMBER SINCE</p>
+                <p className="text-white font-medium text-lg">
+                  {new Date(user?.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </p>
               </div>
             </div>
 
-            {/* Logout Button - Bottom Right */}
-            <div className="flex justify-end pt-4">
+            {/* Logout Button */}
+            <div className="absolute top-8 right-8">
               <button
                 onClick={handleLogout}
-                className="group flex items-center space-x-2 bg-transparent hover:bg-zinc-800 text-zinc-400 hover:text-red-500 px-4 py-2 rounded-md transition-all duration-200"
+                className="group flex items-center space-x-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-red-500 px-4 py-2 rounded-md transition-all duration-200"
               >
-                <svg 
-                  className="w-5 h-5" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
                 <span>Logout</span>

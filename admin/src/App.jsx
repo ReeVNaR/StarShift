@@ -11,11 +11,18 @@ export default function App() {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
         <nav className="bg-gradient-to-r from-gray-800 to-gray-900 text-white p-4 shadow-xl sticky top-0 z-50">
           <div className="container mx-auto flex items-center justify-between px-4">
-            <Link to="/" className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600">
+            <Link 
+              to="/" 
+              className="text-2xl font-bold animate-text-gradient bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500 bg-[length:200%_auto] bg-clip-text text-transparent"
+              style={{ backgroundSize: '200% auto' }}
+            >
               Starshift Admin
             </Link>
             <div className="flex space-x-4">
-              <Link to="/add-product" className="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-blue-500/30">
+              <Link 
+                to="/add-product" 
+                className="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 animate-pulse-shadow"
+              >
                 Add Product
               </Link>
             </div>

@@ -33,13 +33,15 @@ export default function ProductCard({ product, onDelete, onUpdate }) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow border">
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-full h-56 object-cover rounded-t-lg"
-      />
-      <div className="p-5">
+    <div className="bg-white rounded-lg shadow-md border border-gray-200">
+      <div className="aspect-w-16 aspect-h-9">
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full h-48 object-cover rounded-t-lg"
+        />
+      </div>
+      <div className="p-4">
         {isEditing ? (
           <div className="space-y-4">
             <input
@@ -70,28 +72,26 @@ export default function ProductCard({ product, onDelete, onUpdate }) {
           </div>
         ) : (
           <>
-            <div className="flex justify-between items-start mb-3">
-              <h3 className="text-xl font-semibold text-gray-800">{product.name}</h3>
-              <span className="text-2xl font-bold text-blue-600">
-                ${product.price.toFixed(2)}
-              </span>
+            <div className="mb-3">
+              <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
+              <p className="text-blue-600 font-bold mt-1">${product.price.toFixed(2)}</p>
             </div>
-            <p className="text-gray-600 mb-3">{product.description}</p>
-            <div className="inline-block px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm mb-4">
+            <p className="text-gray-600 text-sm mb-3">{product.description}</p>
+            <div className="inline-block px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
               {product.category}
             </div>
           </>
         )}
-        <div className="flex justify-end gap-3 mt-4 pt-4 border-t">
+        <div className="mt-4 pt-4 border-t border-gray-100 flex justify-end gap-2">
           <button
             onClick={handleEdit}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="px-4 py-2 text-sm bg-blue-500 text-white rounded-md"
           >
             {isEditing ? 'Save' : 'Edit'}
           </button>
           <button
             onClick={handleDelete}
-            className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+            className="px-4 py-2 text-sm bg-red-500 text-white rounded-md"
           >
             Delete
           </button>
