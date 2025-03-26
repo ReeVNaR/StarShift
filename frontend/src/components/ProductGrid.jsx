@@ -1,30 +1,41 @@
 import { useTheme } from '../context/ThemeContext';
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const ProductGrid = ({ products }) => {
   const theme = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState('right');
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
-    if (products.length <= 1) return;
+    if (products.length <= 1 || isPaused) return;
+    
     const interval = setInterval(() => {
       setSlideDirection('right');
       setCurrentIndex((prev) => (prev + 1) % products.length);
-    }, 5000);
+    }, 5000); // 5 seconds between slides
+
     return () => clearInterval(interval);
-  }, [products.length]);
+  }, [products.length, isPaused]);
+
+  const handleSlideChange = useCallback((direction, index) => {
+    setSlideDirection(direction);
+    setCurrentIndex(index);
+    // Brief pause after manual navigation
+    setIsPaused(true);
+    setTimeout(() => setIsPaused(false), 3000); // Resume after 3 seconds
+  }, []);
 
   const handlePrev = () => {
-    setSlideDirection('left');
-    setCurrentIndex((prev) => (prev === 0 ? products.length - 1 : prev - 1));
+    const newIndex = currentIndex === 0 ? products.length - 1 : currentIndex - 1;
+    handleSlideChange('left', newIndex);
   };
 
   const handleNext = () => {
-    setSlideDirection('right');
-    setCurrentIndex((prev) => (prev + 1) % products.length);
+    const newIndex = (currentIndex + 1) % products.length;
+    handleSlideChange('right', newIndex);
   };
 
   const truncateText = (text, wordLimit) => {
@@ -39,13 +50,17 @@ const ProductGrid = ({ products }) => {
   if (!products.length) return null;
   const featuredProduct = products[currentIndex];
 
+  const ROTATION_ANGLE = 360 / products.length;
+
   return (
     <div className="h-full w-full flex items-center">
-      <div className="w-full h-full bg-zinc-900/50 rounded-xl overflow-hidden backdrop-blur-sm border border-zinc-800/50 shadow-2xl relative group">
-        {/* Carousel Controls */}
+      <div className="relative w-full h-[85%] perspective-[2000px]">
+        {/* Navigation Controls */}
         <button
           onClick={handlePrev}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/70"
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-black/50 text-white hover:bg-black/70 transition-all duration-300 hover:scale-110 active:scale-95"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -53,87 +68,111 @@ const ProductGrid = ({ products }) => {
         </button>
         <button
           onClick={handleNext}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/70"
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-black/50 text-white hover:bg-black/70 transition-all duration-300 hover:scale-110 active:scale-95"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
 
-        {/* Carousel Content with Slide Animation */}
-        <div className="relative h-full overflow-hidden">
-          <div
-            className={`flex flex-col md:flex-row h-full transform transition-transform duration-500 ease-out ${
-              slideDirection === 'right' ? 'animate-slide-left' : 'animate-slide-right'
-            }`}
-          >
-            {/* Image Section - Updated for mobile */}
-            <div className="w-full md:w-1/2 h-[40%] md:h-full relative overflow-hidden">
-              <img
-                src={featuredProduct.image}
-                alt={featuredProduct.name}
-                className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
-              />
-            </div>
+        {/* Progress Indicator */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2">
+          {products.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handleSlideChange(index > currentIndex ? 'right' : 'left', index)}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                index === currentIndex 
+                  ? 'w-8 bg-blue-500' 
+                  : 'w-4 bg-gray-500/50 hover:bg-gray-400/50'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
 
-            {/* Content Section - Updated with better scroll handling */}
-            <div className="w-full md:w-1/2 h-[60%] md:h-full flex flex-col relative">
-              <div className="absolute inset-0 bg-gradient-to-bl from-black via-zinc-800/90 to-zinc-400/50 pointer-events-none" />
-              <div className="relative flex flex-col h-full">
-                {/* Title Section - Fixed height */}
-                <div className="p-4 md:p-6 border-b border-zinc-800/10">
-                  <h2 className="text-xl md:text-3xl lg:text-4xl font-bold text-white animate-fade-in-down line-clamp-2">
-                    {featuredProduct.name}
-                  </h2>
-                </div>
+        {/* 3D Carousel */}
+        <div className="absolute inset-0 origin-center [transform-style:preserve-3d]">
+          {products.map((product, index) => {
+            // Calculate positions for 3-card layout
+            let position;
+            if (index === currentIndex) {
+              position = 'front';
+            } else if (index === (currentIndex + 1) % products.length) {
+              position = 'right';
+            } else if (currentIndex === 0 && index === products.length - 1) {
+              position = 'left';
+            } else if (index === (currentIndex - 1 + products.length) % products.length) {
+              position = 'left';
+            } else {
+              position = 'hidden';
+            }
 
-                {/* Description Section - Single line only */}
-                <div className="px-4 md:px-6 flex-1 overflow-y-auto custom-scrollbar">
-                  <div className="prose prose-invert max-w-none">
-                    <p className={`${theme.text} text-sm md:text-lg animate-fade-in-delayed leading-relaxed line-clamp-1`}>
-                      {truncateText(featuredProduct.description, 8)}
-                    </p>
-                  </div>
-                </div>
+            // Updated transform values with deeper positioning
+            const transforms = {
+              front: 'translateZ(400px) scale(1)',
+              left: 'translateX(-70%) translateZ(-600px) rotateY(45deg) scale(0.7)',
+              right: 'translateX(70%) translateZ(-600px) rotateY(-45deg) scale(0.7)',
+              hidden: 'translateZ(-1200px) scale(0.5)'
+            };
 
-                {/* Price and Action Section - Fixed height */}
-                <div className="mt-auto p-4 md:p-6 border-t border-zinc-800/10">
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="text-xl md:text-3xl font-bold text-blue-400 animate-fade-in-delayed">
-                      ${featuredProduct.price.toFixed(2)}
-                    </span>
-                    <Link 
-                      to={`/product/${featuredProduct._id}`}
-                      className="group inline-flex items-center animate-bounce-in"
-                    >
-                      <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white px-4 md:px-8 py-2 md:py-3 rounded-lg text-sm md:text-base font-semibold transition-all duration-300 transform hover:scale-105">
-                        Shop Now
-                        <svg className="w-4 h-4 md:w-5 md:h-5 ml-2 inline-block transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                      </button>
-                    </Link>
-                  </div>
+            const opacity = position === 'hidden' ? 0 : position === 'front' ? 1 : 0.5;
+            const blur = position === 'front' ? '' : 'blur-md';
+            const skeleton = position !== 'front' ? 'before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:animate-[shimmer_2s_infinite]' : '';
 
-                  {/* Carousel Indicators */}
-                  <div className="flex justify-center space-x-2 mt-6">
-                    {products.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => {
-                          setSlideDirection(index > currentIndex ? 'right' : 'left');
-                          setCurrentIndex(index);
-                        }}
-                        className={`h-1.5 rounded-full transition-all duration-300 ${
-                          index === currentIndex ? 'w-8 bg-blue-500' : 'w-4 bg-gray-500/50'
-                        }`}
+            return (
+              <div
+                key={product._id}
+                className={`absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out ${blur}`}
+                style={{
+                  transform: transforms[position],
+                  opacity,
+                  zIndex: position === 'front' ? 3 : 1
+                }}
+              >
+                <div className={`bg-zinc-900/90 w-[80%] h-[75%] mx-auto my-auto rounded-xl overflow-hidden shadow-2xl border border-zinc-800/50 relative ${skeleton}`}>
+                  <div className="flex flex-col md:flex-row h-full">
+                    {/* Image Section */}
+                    <div className="w-full md:w-1/2 h-[45%] md:h-full relative">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
                       />
-                    ))}
+                    </div>
+
+                    {/* Content Section - Updated background */}
+                    <div className="w-full md:w-1/2 h-[55%] md:h-full flex flex-col p-4 md:p-6 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900 via-zinc-900/95 to-black relative">
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-transparent opacity-50" />
+                      <div className="relative z-10">
+                        <h2 className="text-xl md:text-2xl font-bold text-white">
+                          {product.name}
+                        </h2>
+                        <p className="text-gray-300 my-4 line-clamp-2">
+                          {product.description}
+                        </p>
+                        <div className="flex items-center justify-between mt-auto">
+                          <span className="text-2xl font-bold text-blue-400">
+                            ${product.price.toFixed(2)}
+                          </span>
+                          <Link 
+                            to={`/product/${product._id}`}
+                            className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg transition-colors"
+                          >
+                            View Details
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
     </div>

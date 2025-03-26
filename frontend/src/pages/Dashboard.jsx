@@ -33,14 +33,17 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="h-screen overflow-hidden bg-black">
+    <div className="h-screen bg-black overflow-hidden">
       <Navbar />
-      <div className="h-[calc(100vh-64px)] flex flex-col">
-        <div className="h-[45%]">
+      <div className="h-[calc(100vh-64px)] flex flex-col overflow-hidden">
+        {/* Adjusted hero height to fixed value */}
+        <div className="h-[250px]">
           <Hero />
         </div>
-        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-          <div className="relative -mt-6 mb-4">
+        
+        {/* Adjusted margin and container height */}
+        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
+          <div className="mb-2 relative">
             <h2 className={`text-xl font-bold ${theme.text} animate-fade-in-down inline-block`}>
               Featured Products
             </h2>
@@ -53,7 +56,7 @@ const Dashboard = () => {
               <LoadingSpinner />
             </div>
           ) : (
-            <div className="h-[calc(55vh-120px)]">
+            <div className="h-[calc(100vh-420px)]">
               <ProductGrid products={products} />
             </div>
           )}

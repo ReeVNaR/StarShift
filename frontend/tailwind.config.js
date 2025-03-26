@@ -26,6 +26,8 @@ export default {
         'pop-in': 'pop-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
         'slide-left': 'slide-left 0.5s ease-out forwards',
         'slide-right': 'slide-right 0.5s ease-out forwards',
+        'carousel-slide-left': 'carouselSlideLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+        'carousel-slide-right': 'carouselSlideRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards',
       },
       keyframes: {
         pulse: {
@@ -282,11 +284,62 @@ export default {
             opacity: '1',
           },
         },
+        'carouselSlideLeft': {
+          '0%': {
+            transform: 'translateX(0)',
+            opacity: '1'
+          },
+          '50%': {
+            transform: 'translateX(-100%)',
+            opacity: '0'
+          },
+          '51%': {
+            transform: 'translateX(100%)',
+            opacity: '0'
+          },
+          '100%': {
+            transform: 'translateX(0)',
+            opacity: '1'
+          }
+        },
+        'carouselSlideRight': {
+          '0%': {
+            transform: 'translateX(0)',
+            opacity: '1'
+          },
+          '50%': {
+            transform: 'translateX(100%)',
+            opacity: '0'
+          },
+          '51%': {
+            transform: 'translateX(-100%)',
+            opacity: '0'
+          },
+          '100%': {
+            transform: 'translateX(0)',
+            opacity: '1'
+          }
+        },
+        shimmer: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' }
+        },
       },
       boxShadow: {
         'neon': '0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.3), 0 0 30px rgba(59, 130, 246, 0.1)',
         'glow': '0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff'
-      }
+      },
+      utilities: {
+        '.perspective-1000': {
+          perspective: '1000px',
+        },
+        '.perspective-2000': {
+          perspective: '2000px',
+        },
+        '.preserve-3d': {
+          transformStyle: 'preserve-3d',
+        },
+      },
     },
   },
   plugins: [
