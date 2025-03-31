@@ -2,6 +2,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      screens: {
+        'xs': '375px',
+      },
       animation: {
         'spin-slow': 'spin 20s linear infinite',
         'pulse-custom': 'pulse 2s ease-in-out infinite',

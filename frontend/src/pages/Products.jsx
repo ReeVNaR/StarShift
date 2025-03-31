@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import { useTheme } from "../context/ThemeContext";
 import { useCart } from '../context/CartContext';
 import LoadingSpinner from "../components/LoadingSpinner";
+import { glassButtonClass } from '../components/common/ButtonStyles';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -63,8 +64,10 @@ const Products = () => {
     <div className="min-h-screen bg-black">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className={`text-3xl font-bold mb-8 ${theme.text} animate-fade-in-down`}>
+        <h1 className="text-3xl font-bold text-white mb-8 relative inline-block animate-fade-in-down">
           {category ? `${category} Products` : 'All Products'}
+          <div className="absolute -bottom-2 left-0 w-32 h-1 bg-gradient-to-r from-blue-500 to-transparent"></div>
+          <div className="absolute -bottom-2 left-0 w-32 h-1 bg-gradient-to-r from-blue-500 to-transparent animate-pulse-glow"></div>
         </h1>
         
         {loading ? (
@@ -94,6 +97,12 @@ const Products = () => {
                   <p className="mt-2 text-xl font-bold text-blue-400">
                     ${product.price.toFixed(2)}
                   </p>
+                  <button 
+                    onClick={(e) => handleAddToCart(e, product._id)}
+                    className={`${glassButtonClass} w-full mt-4`}
+                  >
+                    Add to Cart
+                  </button>
                 </div>
               </Link>
             ))}

@@ -1,21 +1,21 @@
 import { useTheme } from '../context/ThemeContext';
 import { Link } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
+import { glassButtonClass } from './common/ButtonStyles';
 
 const ProductGrid = ({ products }) => {
   const theme = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState('right');
-  const [isExpanded, setIsExpanded] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     if (products.length <= 1 || isPaused) return;
-    
+
     const interval = setInterval(() => {
       setSlideDirection('right');
       setCurrentIndex((prev) => (prev + 1) % products.length);
-    }, 5000); // 5 seconds between slides
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [products.length, isPaused]);
@@ -23,38 +23,38 @@ const ProductGrid = ({ products }) => {
   const handleSlideChange = useCallback((direction, index) => {
     setSlideDirection(direction);
     setCurrentIndex(index);
-    // Brief pause after manual navigation
     setIsPaused(true);
-    setTimeout(() => setIsPaused(false), 3000); // Resume after 3 seconds
+    setTimeout(() => setIsPaused(false), 3000);
   }, []);
 
-  const handlePrev = () => {
-    const newIndex = currentIndex === 0 ? products.length - 1 : currentIndex - 1;
-    handleSlideChange('left', newIndex);
-  };
-
-  const handleNext = () => {
-    const newIndex = (currentIndex + 1) % products.length;
-    handleSlideChange('right', newIndex);
-  };
+  const handlePrev = () => handleSlideChange('left', (currentIndex - 1 + products.length) % products.length);
+  const handleNext = () => handleSlideChange('right', (currentIndex + 1) % products.length);
 
   const truncateText = (text, wordLimit) => {
     if (!text) return "";
     const words = text.split(' ');
-    if (words.length > wordLimit) {
-      return words.slice(0, wordLimit).join(' ') + '...';
-    }
-    return text;
+    return words.length > wordLimit ? words.slice(0, wordLimit).join(' ') + '...' : text;
   };
 
   if (!products.length) return null;
-  const featuredProduct = products[currentIndex];
 
-  const ROTATION_ANGLE = 360 / products.length;
+  const calculatePosition = (index) => {
+    if (index === currentIndex) return 'front';
+    if (index === (currentIndex + 1) % products.length) return 'right';
+    if (index === (currentIndex - 1 + products.length) % products.length) return 'left';
+    return 'hidden';
+  };
+
+  const transforms = {
+    front: 'translateZ(400px) scale(1)',
+    left: 'translateX(-70%) translateZ(-600px) rotateY(45deg) scale(0.7)',
+    right: 'translateX(70%) translateZ(-600px) rotateY(-45deg) scale(0.7)',
+    hidden: 'translateZ(-1200px) scale(0.5)'
+  };
 
   return (
-    <div className="h-full w-full flex items-center">
-      <div className="relative w-full h-[85%] perspective-[2000px]">
+    <div className="w-full py-8">
+      <div className="relative w-full min-h-[400px] perspective-[2000px]">
         {/* Navigation Controls */}
         <button
           onClick={handlePrev}
@@ -72,7 +72,7 @@ const ProductGrid = ({ products }) => {
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 24 24">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
@@ -98,28 +98,7 @@ const ProductGrid = ({ products }) => {
         {/* 3D Carousel */}
         <div className="absolute inset-0 origin-center [transform-style:preserve-3d]">
           {products.map((product, index) => {
-            // Calculate positions for 3-card layout
-            let position;
-            if (index === currentIndex) {
-              position = 'front';
-            } else if (index === (currentIndex + 1) % products.length) {
-              position = 'right';
-            } else if (currentIndex === 0 && index === products.length - 1) {
-              position = 'left';
-            } else if (index === (currentIndex - 1 + products.length) % products.length) {
-              position = 'left';
-            } else {
-              position = 'hidden';
-            }
-
-            // Updated transform values with deeper positioning
-            const transforms = {
-              front: 'translateZ(400px) scale(1)',
-              left: 'translateX(-70%) translateZ(-600px) rotateY(45deg) scale(0.7)',
-              right: 'translateX(70%) translateZ(-600px) rotateY(-45deg) scale(0.7)',
-              hidden: 'translateZ(-1200px) scale(0.5)'
-            };
-
+            const position = calculatePosition(index);
             const opacity = position === 'hidden' ? 0 : position === 'front' ? 1 : 0.5;
             const blur = position === 'front' ? '' : 'blur-md';
             const skeleton = position !== 'front' ? 'before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:animate-[shimmer_2s_infinite]' : '';
@@ -145,7 +124,7 @@ const ProductGrid = ({ products }) => {
                       />
                     </div>
 
-                    {/* Content Section - Updated background */}
+                    {/* Content Section */}
                     <div className="w-full md:w-1/2 h-[55%] md:h-full flex flex-col p-4 md:p-6 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900 via-zinc-900/95 to-black relative">
                       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-transparent opacity-50" />
                       <div className="relative z-10">
@@ -153,7 +132,7 @@ const ProductGrid = ({ products }) => {
                           {product.name}
                         </h2>
                         <p className="text-gray-300 my-4 line-clamp-2">
-                          {product.description}
+                          {truncateText(product.description, 20)}
                         </p>
                         <div className="flex items-center justify-between mt-auto">
                           <span className="text-2xl font-bold text-blue-400">
@@ -161,9 +140,19 @@ const ProductGrid = ({ products }) => {
                           </span>
                           <Link 
                             to={`/product/${product._id}`}
-                            className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg transition-colors"
+                            className={glassButtonClass}
+                            onMouseEnter={(e) => {
+                              e.stopPropagation();
+                              setIsPaused(true);
+                            }}
+                            onMouseLeave={(e) => {
+                              e.stopPropagation();
+                              setIsPaused(false);
+                            }}
                           >
-                            View Details
+                            <span className="relative z-10 tracking-wider text-sm font-medium group-hover:text-white">
+                              View Details
+                            </span>
                           </Link>
                         </div>
                       </div>
