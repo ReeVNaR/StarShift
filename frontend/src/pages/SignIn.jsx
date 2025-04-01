@@ -261,9 +261,9 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-black">
+    <div className="min-h-[100vh] w-full flex flex-col bg-black overflow-hidden relative">
       <Navbar />
-      <div className="flex-1 flex flex-col lg:flex-row items-center justify-center signin-container px-4 sm:px-8 lg:px-12 py-8 lg:py-16 gap-8 lg:gap-12">
+      <div className="flex-1 flex flex-col lg:flex-row items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 py-4 sm:py-6 md:py-8 lg:py-16 gap-6 sm:gap-8 lg:gap-12 relative">
         {/* Light Beams */}
         <div className="absolute inset-0">
           <div
@@ -283,9 +283,9 @@ const SignIn = () => {
         <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100%_3px]"></div>
 
         {/* Left Content */}
-        <div className="flex flex-col items-center relative z-10 max-w-2xl w-full lg:w-[60%]" 
+        <div className="flex flex-col items-center relative z-10 max-w-2xl w-full lg:w-[60%] px-2 sm:px-4 md:px-6" 
              style={{ animation: "fadeInUp 1s ease-out" }}>
-          <div className="flex flex-col items-center space-y-6 mb-12">
+          <div className="flex flex-col items-center space-y-4 sm:space-y-6 mb-8 sm:mb-12">
             <div className="flex items-center">
               <div className="w-12 lg:w-16 h-1 bg-emerald-500 rounded mr-4"
              style={{ animation: "glowPulse 2s ease-in-out infinite" }}></div>
@@ -300,13 +300,13 @@ const SignIn = () => {
               <div className="w-12 lg:w-16 h-1 bg-emerald-500 rounded ml-4"
              style={{ animation: "glowPulse 2s ease-in-out infinite" }}></div>
             </div>
-            <h2 className="text-2xl lg:text-3xl text-emerald-400 font-orbitron tracking-wide text-center"
-          style={{ animation: "slideIn 1s ease-out" }}>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl text-emerald-400 font-orbitron tracking-wide text-center"
+                style={{ animation: "slideIn 1s ease-out" }}>
               Premium Gaming Gear
             </h2>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full max-w-xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 w-full max-w-xl mx-auto px-2 sm:px-0">
             <Link to="/products" className="text-center grid-item hover:scale-105 transition-transform duration-300 cursor-pointer"
            style={{ animation: "fadeInRotate 0.6s ease-out forwards", animationDelay: "0.2s" }}>
               <div className="text-emerald-500 text-lg lg:text-xl mb-2 tracking-wider feature-title">MOUSEPADS</div>
@@ -331,8 +331,8 @@ const SignIn = () => {
         </div>
 
         {/* Right Content - Sign In Form */}
-        <div className="w-full lg:w-[35%] flex justify-end">
-          <form onSubmit={handleSubmit} className="signin-form w-full max-w-md p-6 sm:p-8 lg:p-10 rounded-lg relative z-10">
+        <div className="w-full sm:w-[90%] md:w-[80%] lg:w-[35%] flex justify-center lg:justify-end items-center mt-6 lg:mt-0">
+          <form onSubmit={handleSubmit} className="signin-form w-full max-w-md p-4 sm:p-6 lg:p-8 rounded-lg relative z-10">
             <h2 className="text-2xl lg:text-3xl font-bold mb-6 lg:mb-10 text-center text-white font-orbitron tracking-wider">
               Access Your Account
             </h2>
