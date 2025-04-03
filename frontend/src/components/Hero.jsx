@@ -84,12 +84,12 @@ const Hero = () => {
           text-zinc-200
           font-orbitron font-bold tracking-[0.15em] uppercase
           text-center max-w-[90%] xs:max-w-[80%] md:max-w-[70%] mx-auto">
-          Your Ultimate Gaming Gear Destination
+          Your <span className="text-[rgb(46,69,144)] hover:text-[rgb(132,204,22)] font-medium transition-all duration-300 hover animate-random-text">Ultimate</span> Gaming Gear Destination
         </p>
-        <div className="transform-gpu">
+        <div className="flex flex-col items-center space-y-4">
           <Link to="/products">
-            <button className={`${glassButtonClass} text-sm sm:text-base px-8 py-3`}>
-              <span className="relative z-10 tracking-wider font-medium group-hover:text-white whitespace-nowrap">
+            <button className="shop-now-button w-full p-4 rounded-lg text-white font-bold font-orbitron tracking-wider transition-all duration-300 border-2 border-white/50 hover:border-white">
+              <span className="text-[rgb(46,69,144)] hover:text-[rgb(132,204,22)] font-medium transition-all duration-300 hover animate-random-text">
                 SHOP NOW
               </span>
             </button>
@@ -110,16 +110,28 @@ styleSheet.textContent = `
     animation: shine 10s infinite linear, colorCycle 4s infinite ease-in-out, bigPulse 10s infinite ease-in-out;
     filter: brightness(1.3) contrast(1.2) drop-shadow(0 0 20px rgba(255,255,255,0.9));
   }
-  .hero-button {
-    px-8 py-3 rounded-lg font-semibold text-white relative overflow-hidden transform hover:scale-105 transition-all duration-300;
-    font-family: 'Orbitron, sans-serif';
-    background: linear-gradient(90deg, #1e40af, #3b82f6, #60a5fa, #1e40af);
-    background-size: 300% 100%;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(59,130,246,0.3), inset 0 0 10px rgba(59,130,246,0.2), 0 0 0 1px rgba(59,130,246,0.5);
-    animation: rgbCycle 3s linear infinite;
-    letter-spacing: 1px;
+  .shop-now-button {
+    background: linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.1)
+    );
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .shop-now-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    background: linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.15)
+    );
   }
   @keyframes shine {
     from { mask-position: 200% 0; -webkit-mask-position: 200% 0; }

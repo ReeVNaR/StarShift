@@ -11,7 +11,13 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="backdrop-blur-md fixed top-0 left-0 right-0 z-50 animate-random-color border-b">
+      <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out"
+        style={{
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.3))',
+          backdropFilter: 'blur(16px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 80px rgba(255, 255, 255, 0.05)'
+        }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="transform hover:scale-105 transition-transform duration-200">
@@ -68,7 +74,12 @@ const Navbar = () => {
               isMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'
             } md:hidden fixed inset-x-0 top-16 transition-all duration-300 ease-in-out`}
           >
-            <div className="bg-zinc-900/95 border-b border-zinc-800/50 backdrop-blur-md shadow-xl">
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.3))',
+              backdropFilter: 'blur(16px)',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 80px rgba(255, 255, 255, 0.05)'
+            }}>
               <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col space-y-2 p-4">
                   {['Products', 'Categories', 'Profile'].map((item) => (

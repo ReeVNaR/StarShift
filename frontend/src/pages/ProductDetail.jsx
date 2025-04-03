@@ -63,8 +63,8 @@ const ProductDetail = () => {
             </button>
           </div>
         ) : (
-          <div className="bg-zinc-900/90 rounded-xl overflow-hidden border border-zinc-800/50 shadow-xl">
-            <div className="grid md:grid-cols-2 gap-8 p-8">
+          <div className="signin-form p-8">
+            <div className="grid md:grid-cols-2 gap-8">
               <div className="space-y-4">
                 <div className="overflow-hidden rounded-lg">
                   <img
