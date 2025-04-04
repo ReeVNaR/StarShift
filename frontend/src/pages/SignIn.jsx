@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const SignIn = () => {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -360,6 +361,7 @@ const SignIn = () => {
           </form>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
