@@ -45,30 +45,6 @@ const Products = () => {
   useEffect(() => {
     const styleSheet = document.createElement("style");
     styleSheet.textContent = `
-      .hexagon-grid {
-        position: absolute;
-        inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 30 L15 0 L45 0 L60 30 L45 60 L15 60Z' fill='none' stroke='%234B5563' stroke-width='1'/%3E%3C/svg%3E");
-        background-size: 60px 60px;
-        opacity: 0.1;
-        animation: hexMove 40s linear infinite;
-      }
-
-      @keyframes hexMove {
-        0% { background-position: 0 0; }
-        100% { background-position: 60px 60px; }
-      }
-
-      @keyframes beam-slide {
-        0% { transform: translateX(-100%) rotate(-45deg); }
-        100% { transform: translateX(100%) rotate(-45deg); }
-      }
-
-      @keyframes beam-slide-reverse {
-        0% { transform: translateX(100%) rotate(45deg); }
-        100% { transform: translateX(-100%) rotate(45deg); }
-      }
-
       .product-card {
         animation: fadeIn 0.5s ease-out forwards;
         opacity: 0;
@@ -102,63 +78,73 @@ const Products = () => {
   );
 
   return (
-    <div className="min-h-screen bg-black overflow-hidden">
+    <div className="min-h-screen bg-black bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900 via-black to-black">
       <Navbar />
-      <div className="absolute inset-0">
-        <div className="hexagon-grid"></div>
-        <div
-          className="absolute top-0 -left-1/4 w-1/2 h-full bg-gradient-to-r from-gray-900/0 via-gray-100/5 to-gray-900/0 -rotate-45 transform-gpu"
-          style={{ animation: "beam-slide 8s cubic-bezier(0.4, 0, 0.2, 1) infinite" }}
-        ></div>
-        <div
-          className="absolute top-0 -right-1/4 w-1/2 h-full bg-gradient-to-l from-gray-900/0 via-gray-100/5 to-gray-900/0 rotate-45 transform-gpu"
-          style={{ animation: "beam-slide-reverse 8s cubic-bezier(0.4, 0, 0.2, 1) infinite" }}
-        ></div>
-        <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100%_3px]"></div>
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center mb-8">
-          <div className="w-12 h-1 bg-emerald-500 rounded mr-4 animate-pulse"></div>
-          <h1 className="text-3xl font-bold text-white font-orbitron relative">
-            {category ? `${category} Products` : 'All Products'}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header section */}
+        <div className="relative mb-16">
+          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2">
+            <div className="flex items-center justify-center space-x-4">
+              <div className="w-24 h-px bg-gradient-to-r from-transparent via-emerald-500 to-transparent"></div>
+              <div className="w-3 h-3 border-2 border-emerald-500 transform rotate-45"></div>
+              <div className="w-48 h-px bg-emerald-500"></div>
+              <div className="w-3 h-3 border-2 border-emerald-500 transform rotate-45"></div>
+              <div className="w-24 h-px bg-gradient-to-l from-transparent via-emerald-500 to-transparent"></div>
+            </div>
+          </div>
+          <h1 className="text-4xl font-bold text-center text-white font-orbitron relative inline-block w-full">
+            <span className="relative z-10 px-8 py-2 bg-black">
+              {category ? `${category} Products` : 'All Products'}
+            </span>
           </h1>
-          <div className="w-12 h-1 bg-emerald-500 rounded ml-4 animate-pulse"></div>
         </div>
-        
+
         {loading ? (
           <div className="flex justify-center items-center h-48">
             <LoadingSpinner />
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8 max-w-[1600px] mx-auto">
             {products.map((product, index) => (
               <Link
                 key={product._id}
                 to={`/product/${product._id}`}
-                className="product-card group bg-zinc-900/50 backdrop-blur-sm rounded-xl overflow-hidden border border-zinc-800/50 hover:border-emerald-500/50 transition-all duration-300 shadow-xl hover:-translate-y-1 hover:shadow-2xl"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className="product-card group relative overflow-hidden transform transition-all duration-300 hover:-translate-y-1"
+                style={{ 
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.3))',
+                  backdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  boxShadow: '0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 80px rgba(255, 255, 255, 0.05)',
+                  clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%)',
+                  animationDelay: `${index * 100}ms` 
+                }}
               >
-                <div className="aspect-square overflow-hidden">
+                <div className="aspect-square overflow-hidden bg-black">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 opacity-90 group-hover:opacity-100"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
                 </div>
-                <div className="p-4 bg-gradient-to-b from-zinc-900/90 to-black">
-                  <h3 className="text-lg font-medium text-gray-200 group-hover:text-emerald-400 transition-colors duration-200 line-clamp-2 font-orbitron">
+                <div className="p-4 bg-gradient-to-t from-black/80 to-transparent">
+                  <h3 className="text-lg font-medium text-white group-hover:text-emerald-400 transition-colors duration-200 font-orbitron line-clamp-1">
                     {product.name}
                   </h3>
                   <p className="mt-2 text-xl font-bold text-emerald-400">
                     ${product.price.toFixed(2)}
                   </p>
-                  <button 
-                    onClick={(e) => handleAddToCart(e, product._id)}
-                    className={`${glassButtonClass} w-full mt-4 hover:bg-emerald-500/10 hover:border-emerald-500/50`}
-                  >
-                    Add to Cart
-                  </button>
+                  <div className="relative mt-4">
+                    <button 
+                      onClick={(e) => handleAddToCart(e, product._id)}
+                      className="w-full py-2.5 px-4 bg-black/50 border border-emerald-500/20
+                      transition-all duration-300 hover:border-emerald-500/50 relative
+                      font-orbitron text-sm tracking-wider uppercase text-emerald-400
+                      hover:text-emerald-300 rounded-lg"
+                    >
+                      <span className="relative z-10">Add to Cart</span>
+                    </button>
+                  </div>
                 </div>
               </Link>
             ))}
