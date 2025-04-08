@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createProduct } from '../services/api';
+import { uploadToCloudinary } from '../services/cloudinary';
 
 export default function AddProductForm() {
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [product, setProduct] = useState({
     name: '',
     price: '',
@@ -15,10 +19,18 @@ export default function AddProductForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createProduct(product);
+      setIsUploading(true);
+      if (imagePreview && imagePreview.file) {
+        const imageUrl = await uploadToCloudinary(imagePreview.file);
+        await createProduct({ ...product, image: imageUrl });
+      } else {
+        await createProduct(product);
+      }
       navigate('/');
     } catch (error) {
       alert(error.message);
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -28,6 +40,25 @@ export default function AddProductForm() {
       ...prev,
       [name]: name === 'price' ? parseFloat(value) : value
     }));
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    handleImageFile(file);
+  };
+
+  const handleImageFile = (file) => {
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview({
+          url: e.target.result,
+          file: file
+        });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -58,15 +89,32 @@ export default function AddProductForm() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Image URL</label>
-          <input
-            type="url"
-            name="image"
-            value={product.image}
-            onChange={handleChange}
-            className="mt-1 w-full p-2 border rounded-lg"
-            required
-          />
+          <label className="block text-sm font-medium text-gray-700">Image</label>
+          <div
+            className="mt-1 w-full h-48 border-2 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer"
+            onDrop={handleDrop}
+            onDragOver={(e) => e.preventDefault()}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            {imagePreview ? (
+              <img
+                src={imagePreview.url}
+                alt="Preview"
+                className="h-full object-contain"
+              />
+            ) : (
+              <div className="text-center">
+                <p>Drag and drop an image here, or click to select</p>
+              </div>
+            )}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => handleImageFile(e.target.files[0])}
+            />
+          </div>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700">Category</label>
@@ -100,9 +148,10 @@ export default function AddProductForm() {
           </button>
           <button
             type="submit"
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            disabled={isUploading}
+            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300"
           >
-            Add Product
+            {isUploading ? 'Uploading...' : 'Add Product'}
           </button>
         </div>
       </form>
