@@ -1,72 +1,70 @@
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import axios from "axios";
+import api from '../services/api';
 
 const Product = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    // Apply the same styling as SignIn page
     const styleSheet = document.createElement("style");
     styleSheet.textContent = `
       .product-card {
         background: linear-gradient(
           135deg,
-          rgba(255, 255, 255, 0.1),
-          rgba(255, 255, 255, 0.05),
-          rgba(0, 0, 0, 0.3)
+          rgba(255, 0, 0, 0.1),
+          rgba(0, 0, 0, 0.9)
         );
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+        border: 1px solid rgba(255, 0, 0, 0.2);
         box-shadow: 
-          0 0 20px rgba(0, 0, 0, 0.5),
-          inset 0 0 80px rgba(255, 255, 255, 0.05);
-        animation: boxGlow 4s ease-in-out infinite;
-        transition: transform 0.3s ease;
+          0 0 20px rgba(255, 0, 0, 0.1),
+          inset 0 0 80px rgba(255, 0, 0, 0.05);
+        animation: rogGlow 4s ease-in-out infinite;
+        transition: all 0.3s ease;
       }
 
       .product-card:hover {
-        transform: translateY(-5px);
+        transform: translateY(-5px) scale(1.02);
+        border-color: rgba(255, 0, 0, 0.5);
       }
 
-      @keyframes boxGlow {
+      @keyframes rogGlow {
         0%, 100% { 
-          border-color: rgba(255, 255, 255, 0.05);
-          box-shadow: 0 0 20px rgba(0, 0, 0, 0.5),
-                inset 0 0 80px rgba(255, 255, 255, 0.03);
+          border-color: rgba(255, 0, 0, 0.2);
+          box-shadow: 0 0 20px rgba(255, 0, 0, 0.1);
         }
         50% { 
-          border-color: rgba(255, 255, 255, 0.1);
-          box-shadow: 0 0 30px rgba(0, 0, 0, 0.6),
-                inset 0 0 100px rgba(255, 255, 255, 0.05);
+          border-color: rgba(255, 0, 0, 0.4);
+          box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
         }
       }
 
-      .hexagon-grid {
+      .cyber-grid {
         position: absolute;
         inset: 0;
         opacity: 0.05;
-        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 30 L15 0 L45 0 L60 30 L45 60 L15 60Z' fill='none' stroke='%234B5563' stroke-width='1'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 30 L15 0 L45 0 L60 30 L45 60 L15 60Z' fill='none' stroke='%23FF0000' stroke-width='1'/%3E%3C/svg%3E");
         background-size: 60px 60px;
-        animation: hexMove 40s linear infinite;
+        animation: gridMove 40s linear infinite;
       }
 
-      @keyframes hexMove {
+      @keyframes gridMove {
         0% { background-position: 0 0; }
         100% { background-position: 60px 60px; }
       }
 
       .buy-button {
-        background: linear-gradient(45deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.2));
-        border: 1px solid rgba(16, 185, 129, 0.2);
+        background: linear-gradient(45deg, rgba(255, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+        border: 1px solid rgba(255, 0, 0, 0.3);
+        transform: skew(-10deg);
         transition: all 0.3s ease;
       }
 
       .buy-button:hover {
-        background: linear-gradient(45deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.3));
-        transform: scale(1.05);
-        box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        background: rgba(255, 0, 0, 0.8);
+        transform: skew(-10deg) scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
       }
     `;
     document.head.appendChild(styleSheet);
@@ -77,7 +75,7 @@ const Product = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/products');
+        const response = await api.products.getAll();
         setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -87,41 +85,41 @@ const Product = () => {
   }, []);
 
   return (
-    <div className="min-h-screen w-full bg-black overflow-hidden relative">
+    <div className="min-h-screen bg-[#0A0A0A] bg-[url('/cyber-grid.png')] bg-fixed">
       <Navbar />
       
       {/* Background Effects */}
-      <div className="hexagon-grid"></div>
-      <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100%_3px]"></div>
+      <div className="cyber-grid"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(255,0,0,0.02)_1px,transparent_1px)] bg-[size:100%_3px]"></div>
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8 relative z-10">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 font-orbitron tracking-wider">
-            Gaming Gear
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 font-orbitron tracking-wider uppercase">
+            Gaming Arsenal
           </h1>
-          <div className="w-24 h-1 bg-emerald-500 mx-auto rounded"></div>
+          <div className="w-24 h-1 bg-gradient-to-r from-red-700 to-red-500 mx-auto"></div>
         </div>
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map((product) => (
-            <div key={product._id} className="product-card rounded-lg p-6">
-              <div className="aspect-w-1 aspect-h-1 mb-4">
+            <div key={product._id} className="product-card p-6">
+              <div className="aspect-w-1 aspect-h-1 mb-4 overflow-hidden">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover rounded-lg"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">{product.name}</h3>
+              <h3 className="text-xl font-bold text-white mb-2 font-orbitron uppercase">{product.name}</h3>
               <p className="text-gray-400 mb-4">{product.description}</p>
               <div className="flex justify-between items-center">
-                <span className="text-emerald-500 text-xl font-bold">
+                <span className="text-red-500 text-xl font-bold">
                   ${product.price}
                 </span>
-                <button className="buy-button px-6 py-2 rounded-lg text-emerald-500 font-bold">
+                <button className="buy-button px-6 py-2 text-red-500 hover:text-white font-bold font-orbitron uppercase">
                   Buy Now
                 </button>
               </div>

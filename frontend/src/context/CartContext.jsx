@@ -1,37 +1,32 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchCart = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setCartItems([]);
+      setLoading(false);
+      return;
+    }
+
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setLoading(false);
+      const response = await api.cart.get();
+      if (response.data.cart && response.data.cart.items) {
+        setCartItems(response.data.cart.items);
+      } else {
         setCartItems([]);
-        return;
       }
-
-      const { data } = await axios.get('http://localhost:5000/cart', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      
-      // Better error and data validation
-      if (!data || !data.cart) {
-        throw new Error('Invalid cart data received');
-      }
-
-      const validItems = data.cart.items?.filter(item => 
-        item && item.productId && typeof item.quantity === 'number'
-      ) || [];
-
-      setCartItems(validItems);
+      setError(null);
     } catch (error) {
       console.error('Cart fetch error:', error);
+      setError(error.message);
       setCartItems([]);
     } finally {
       setLoading(false);
@@ -39,57 +34,27 @@ export const CartProvider = ({ children }) => {
   };
 
   const addToCart = async (productId, quantity = 1) => {
-    const token = localStorage.getItem('token');
-    if (!token) return false;
-
     try {
-      const response = await axios.post(
-        'http://localhost:5000/cart/add', 
-        { productId, quantity },
-        { 
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
-      console.log('Add to cart response:', response.data); // Debug log
+      await api.cart.add(productId, quantity);
       await fetchCart();
-      return true;
     } catch (error) {
-      console.error('Error adding to cart:', error);
-      return false;
+      console.error('Add to cart error:', error);
     }
   };
 
   const removeFromCart = async (productId) => {
-    const token = localStorage.getItem('token');
-    if (!token) return false;
-
     try {
-      const response = await axios.delete(
-        `http://localhost:5000/cart/remove/${productId}`,
-        { headers: { Authorization: `Bearer ${token}` }}
-      );
-
-      if (response.data.cart) {
-        await fetchCart(); // Refresh cart data
-        return true;
-      }
-      return false;
+      await api.cart.remove(productId);
+      await fetchCart();
     } catch (error) {
-      console.error('Error removing from cart:', error.response?.data || error.message);
-      return false;
+      console.error('Remove from cart error:', error);
     }
   };
 
   // Listen for token changes
   useEffect(() => {
-    const handleStorageChange = (e) => {
-      if (e.key === 'token') {
-        if (e.newValue) {
-          fetchCart();
-        } else {
-          setCartItems([]);
-        }
-      }
+    const handleStorageChange = () => {
+      fetchCart();
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -104,8 +69,9 @@ export const CartProvider = ({ children }) => {
     <CartContext.Provider value={{ 
       cartItems, 
       loading, 
+      error,
       addToCart, 
-      removeFromCart,
+      removeFromCart, 
       fetchCart 
     }}>
       {children}
@@ -113,4 +79,10 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-export const useCart = () => useContext(CartContext);
+export const useCart = () => {
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+  return context;
+};

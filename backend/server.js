@@ -244,66 +244,135 @@ app.get("/categories", async (req, res) => {
   }
 });
 
-// Add to Cart Route
-app.post("/cart/add", async (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "Unauthorized" });
-
+// Add middleware for token verification
+const verifyToken = (req, res, next) => {
   try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "No token provided" });
+    }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const { productId, quantity } = req.body;
+    req.userId = decoded.id;
+    next();
+  } catch (error) {
+    console.error('Token verification error:', error);
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
 
-    let cart = await Cart.findOne({ userId: decoded.id });
-    if (!cart) {
-      cart = new Cart({ userId: decoded.id, items: [] });
+// Update Cart Routes
+app.post("/cart/add", verifyToken, async (req, res) => {
+  try {
+    const { productId, quantity = 1 } = req.body;
+    
+    // Verify product exists
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
     }
 
-    const existingItem = cart.items.find(item => item.productId.toString() === productId);
-    if (existingItem) {
-      existingItem.quantity += quantity || 1;
+    let cart = await Cart.findOne({ userId: req.userId });
+    
+    if (!cart) {
+      cart = new Cart({ userId: req.userId, items: [] });
+    }
+
+    const existingItemIndex = cart.items.findIndex(
+      item => item.productId.toString() === productId
+    );
+
+    if (existingItemIndex > -1) {
+      cart.items[existingItemIndex].quantity += quantity;
     } else {
-      cart.items.push({ productId, quantity: quantity || 1 });
+      cart.items.push({ productId, quantity });
     }
 
     await cart.save();
+    
+    // Populate product details before sending response
+    await cart.populate('items.productId');
+    
     res.json({ message: "Added to cart", cart });
   } catch (error) {
-    res.status(500).json({ message: "Error adding to cart", error });
+    console.error('Add to cart error:', error);
+    res.status(500).json({ 
+      message: "Error adding to cart", 
+      error: error.message 
+    });
   }
 });
 
-// Get Cart Route
-app.get("/cart", async (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "Unauthorized" });
-
+app.get("/cart", verifyToken, async (req, res) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const cart = await Cart.findOne({ userId: decoded.id }).populate('items.productId');
-    res.json({ cart: cart || { items: [] } });
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching cart", error });
-  }
-});
+    console.log('Fetching cart for user:', req.userId);
+    
+    const cart = await Cart.findOne({ userId: req.userId })
+      .populate('items.productId');
+    
+    console.log('Found cart:', cart);
 
-// Remove from Cart Route
-app.delete("/cart/remove/:productId", async (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "Unauthorized" });
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const cart = await Cart.findOne({ userId: decoded.id });
-    if (cart) {
-      cart.items = cart.items.filter(item => item.productId.toString() !== req.params.productId);
-      await cart.save();
+    if (!cart) {
+      // Return empty cart instead of error
+      return res.json({ cart: { items: [] } });
     }
+    
+    res.json({ cart });
+  } catch (error) {
+    console.error('Cart fetch error:', error);
+    res.status(500).json({ 
+      message: "Error fetching cart", 
+      error: error.message 
+    });
+  }
+});
+
+app.delete("/cart/remove/:productId", verifyToken, async (req, res) => {
+  try {
+    const cart = await Cart.findOne({ userId: req.userId });
+    
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    cart.items = cart.items.filter(
+      item => item.productId.toString() !== req.params.productId
+    );
+    
+    await cart.save();
+    await cart.populate('items.productId');
+    
     res.json({ message: "Removed from cart", cart });
   } catch (error) {
-    res.status(500).json({ message: "Error removing from cart", error });
+    console.error('Remove from cart error:', error);
+    res.status(500).json({ 
+      message: "Error removing from cart", 
+      error: error.message 
+    });
   }
-}); 
+});
 
+// Update signin route to match frontend
+app.post("/signin", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    const token = jwt.sign(
+      { id: user._id }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: "24h" }
+    );
+    
+    res.json({ token, user: { id: user._id, email: user.email } });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ message: "Error during login", error: error.message });
+  }
+});
 
 // Start Server
 const PORT = process.env.PORT || 5000;

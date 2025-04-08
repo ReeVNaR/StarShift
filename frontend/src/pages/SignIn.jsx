@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import api from '../services/api';
+import { useCart } from '../context/CartContext'; // Fix import path
 
 const SignIn = () => {
   const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState(null); // Add error state
   const navigate = useNavigate();
+  const { fetchCart } = useCart();
 
   useEffect(() => {
     const styleSheet = document.createElement("style");
@@ -256,9 +259,16 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data } = await axios.post("http://localhost:5000/login", form);
-    localStorage.setItem("token", data.token);
-    navigate("/dashboard");
+    setError(null); // Reset error state
+    try {
+      const response = await api.auth.signIn(form);
+      localStorage.setItem("token", response.data.token);
+      await fetchCart();
+      navigate("/dashboard");
+    } catch (error) {
+      console.error('Login error:', error);
+      setError(error.response?.data?.message || 'Failed to sign in'); // Set error message
+    }
   };
 
   return (
@@ -352,6 +362,11 @@ const SignIn = () => {
             <button className="shop-now-button w-full p-4 rounded-lg text-white font-bold font-orbitron tracking-wider transition-all duration-300 mt-2">
               Sign In
             </button>
+            {error && (
+              <div className="text-red-500 text-center mb-4">
+                {error}
+              </div>
+            )}
             <p className="mt-10 text-center text-gray-400 font-orbitron">
               Don't have an account?{" "}
               <a href="/signup" className="text-[rgb(46,69,144)] hover:text-[rgb(132,204,22)] font-medium transition-all duration-300 hover:underline animate-random-text">

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { useTheme } from '../context/ThemeContext';
 import Navbar from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
@@ -19,24 +19,25 @@ const Profile = () => {
       return;
     }
 
-    axios.get('http://localhost:5000/profile', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(res => {
-        if (res.data.user) {
-          setUser(res.data.user);
+    const fetchProfile = async () => {
+      try {
+        const response = await api.user.getProfile();
+        if (response.data.user) {
+          setUser(response.data.user);
         } else {
           setError('Unable to fetch profile data');
         }
-        setLoading(false);
-      })
-      .catch(err => {
+      } catch (err) {
         console.error('Profile Error:', err);
         setError('Session expired. Please sign in again.');
         localStorage.removeItem('token');
         setTimeout(() => navigate('/signin'), 2000);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchProfile();
   }, [navigate]);
 
   const handleLogout = () => {
@@ -67,56 +68,67 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900 via-black to-black">
+    <div className="min-h-screen bg-black bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-900/20 via-black to-black">
       <Navbar />
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header section */}
         <div className="relative mb-16">
           <div className="absolute inset-x-0 top-1/2 -translate-y-1/2">
             <div className="flex items-center justify-center space-x-4">
-              <div className="w-24 h-px bg-gradient-to-r from-transparent via-emerald-500 to-transparent"></div>
-              <div className="w-3 h-3 border-2 border-emerald-500 transform rotate-45"></div>
-              <div className="w-48 h-px bg-emerald-500"></div>
-              <div className="w-3 h-3 border-2 border-emerald-500 transform rotate-45"></div>
-              <div className="w-24 h-px bg-gradient-to-l from-transparent via-emerald-500 to-transparent"></div>
+              <div className="w-24 h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent"></div>
+              <div className="w-3 h-3 border-2 border-gray-500 transform rotate-45"></div>
+              <div className="w-48 h-px bg-gray-500"></div>
+              <div className="w-3 h-3 border-2 border-gray-500 transform rotate-45"></div>
+              <div className="w-24 h-px bg-gradient-to-l from-transparent via-gray-500 to-transparent"></div>
             </div>
           </div>
           <h1 className="text-4xl font-bold text-center text-white font-orbitron relative inline-block w-full">
-            <span className="relative z-10 px-8 py-2 bg-black">Profile</span>
+            <div className="relative z-10 px-8 py-2 bg-black transform skew-x-12">
+              <span className="inline-block transform -skew-x-12 text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-gray-400">
+                Profile
+              </span>
+            </div>
           </h1>
         </div>
 
         {/* Profile Content */}
-        <div className="relative overflow-hidden rounded-2xl mx-auto max-w-3xl"
+        <div className="relative overflow-hidden mx-auto max-w-3xl"
           style={{
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.3))',
+            background: 'linear-gradient(135deg, rgba(107, 114, 128, 0.1), rgba(0, 0, 0, 0.3))',
             backdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            boxShadow: '0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 80px rgba(255, 255, 255, 0.05)'
+            border: '1px solid rgba(107, 114, 128, 0.2)',
+            boxShadow: '0 0 20px rgba(107, 114, 128, 0.2)',
+            clipPath: 'polygon(0 15px, 15px 0, calc(100% - 15px) 0, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0 calc(100% - 15px))'
           }}>
           
           {/* Profile Header */}
-          <div className="relative p-8 border-b border-emerald-500/20">
+          <div className="relative p-8 border-b border-gray-500/20">
             <div className="flex flex-col md:flex-row items-center justify-between">
               <div className="flex flex-col md:flex-row items-center md:space-x-6">
-                <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/10 
-                              flex items-center justify-center text-emerald-400 text-4xl font-bold border border-emerald-500/20
-                              shadow-[0_0_15px_rgba(16,185,129,0.2)] mb-4 md:mb-0">
+                <div className="w-24 h-24 bg-gradient-to-br from-gray-500/20 to-gray-500/10 
+                              flex items-center justify-center text-gray-400 text-4xl font-bold border border-gray-500/20
+                              shadow-[0_0_15px_rgba(107,114,128,0.2)] mb-4 md:mb-0"
+                     style={{
+                       clipPath: 'polygon(0 15px, 15px 0, calc(100% - 15px) 0, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0 calc(100% - 15px))'
+                     }}>
                   {user?.username?.[0]?.toUpperCase()}
                 </div>
                 <div className="text-center md:text-left">
-                  <h2 className="text-2xl font-bold text-white font-orbitron mb-1 animate-random-text">
+                  <h2 className="text-2xl font-bold text-white font-orbitron mb-1">
                     {user?.username}
                   </h2>
-                  <p className="text-emerald-400/80 text-sm">{user?.email}</p>
+                  <p className="text-gray-400/80 text-sm">{user?.email}</p>
                 </div>
               </div>
               
               {/* Logout Button */}
               <button
                 onClick={handleLogout}
-                className="mt-4 md:mt-0 group flex items-center space-x-2 bg-black/50 border border-emerald-500/20
-                         hover:border-emerald-500/50 text-emerald-400 px-4 py-2 rounded-lg transition-all duration-300"
+                className="mt-4 md:mt-0 group flex items-center space-x-2 bg-black/50 border border-gray-500/20
+                         hover:border-gray-500/50 text-gray-400 px-4 py-2 transition-all duration-300"
+                style={{
+                  clipPath: 'polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)'
+                }}
               >
                 <span>Logout</span>
                 <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,7 +140,7 @@ const Profile = () => {
 
           {/* Account Details */}
           <div className="p-8 space-y-6">
-            <h3 className="text-lg font-orbitron text-emerald-400 mb-4">Account Information</h3>
+            <h3 className="text-lg font-orbitron text-gray-400 mb-4">Account Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
                 { label: 'USERNAME', value: user?.username },
@@ -141,10 +153,13 @@ const Profile = () => {
                 { label: 'ACCOUNT STATUS', value: 'Active' }
               ].map((item, index) => (
                 <div key={item.label} 
-                     className="p-4 rounded-lg bg-black/50 border border-emerald-500/20 hover:border-emerald-500/50 transition-all duration-300"
-                     style={{ animationDelay: `${index * 100}ms` }}>
-                  <p className="text-emerald-500/60 text-xs font-orbitron mb-1">{item.label}</p>
-                  <p className="text-white font-medium">{item.value}</p>
+                     className="p-4 bg-black/50 border border-gray-500/20 hover:border-gray-500/50 transition-all duration-300 group"
+                     style={{ 
+                       clipPath: 'polygon(0 10px, 10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px))',
+                       animationDelay: `${index * 100}ms` 
+                     }}>
+                  <p className="text-gray-500/60 text-xs font-orbitron mb-1">{item.label}</p>
+                  <p className="text-white font-medium group-hover:text-gray-400 transition-colors">{item.value}</p>
                 </div>
               ))}
             </div>

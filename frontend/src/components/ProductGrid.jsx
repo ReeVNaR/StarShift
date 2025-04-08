@@ -53,8 +53,8 @@ const ProductGrid = ({ products }) => {
   };
 
   return (
-    <div className="w-full py-8">
-      <div className="relative w-full min-h-[400px] perspective-[2000px]">
+    <div className="w-full h-full flex items-center justify-center">
+      <div className="relative w-full h-full perspective-[2000px]">
         {/* Navigation Controls - Enhanced with pulse effect */}
         <button
           onClick={handlePrev}
@@ -117,7 +117,7 @@ const ProductGrid = ({ products }) => {
                   transition: 'all 0.7s cubic-bezier(0.4, 0.0, 0.2, 1)'
                 }}
               >
-                <div className="w-[80%] h-[75%] mx-auto my-auto rounded-lg overflow-hidden
+                <div className="w-[80%] h-[85%] mx-auto my-auto rounded-lg overflow-hidden
                   bg-[linear-gradient(135deg,rgba(255,255,255,0.07),rgba(0,0,0,0.2),rgba(0,0,0,0.4))]
                   backdrop-filter backdrop-blur-[16px]
                   border border-white/10

@@ -9,6 +9,13 @@ const Navbar = () => {
   const { cartItems } = useCart();
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
+  const navigationLinks = [
+    { name: 'Products', path: '/products' },
+    { name: 'Categories', path: '/categories' },
+    { name: 'Profile', path: '/profile' },
+    // Add more navigation items as needed
+  ];
+
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out"
@@ -20,8 +27,14 @@ const Navbar = () => {
         }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
+            {/* Update Logo Link */}
             <Link to="/" className="transform hover:scale-105 transition-transform duration-200">
-              <img src="STARSHIFT LOGO 1.svg" alt="" className='h-12 w-auto drop-shadow-[0_0_15px_rgba(139,92,246,0.8)]' />
+              <img 
+                src="/STARSHIFT LOGO 1.svg" 
+                alt="StarShift" 
+                className="h-12 w-auto drop-shadow-[0_0_15px_rgba(139,92,246,0.8)]"
+                style={{ filter: 'brightness(1.2) contrast(1.1)' }}
+              />
             </Link>
             
             <div className="flex items-center space-x-4">
@@ -51,17 +64,17 @@ const Navbar = () => {
 
               {/* Desktop Menu */}
               <div className="hidden md:flex items-center space-x-8">
-                {['Products', 'Categories', 'Profile'].map((item, index) => (
-                  <Link 
-                    key={item} 
-                    to={`/${item.toLowerCase()}`} 
+                {navigationLinks.map((link, index) => (
+                  <Link
+                    key={link.name}
+                    to={link.path}
                     className="nav-link relative group"
                     style={{ animationDelay: `${index * 150}ms` }}
                   >
                     <span className="text-gray-300 group-hover:text-white transition-all duration-200">
-                      {item}
+                      {link.name}
                     </span>
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-200 shadow-glow"></span>
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald-500 group-hover:w-full transition-all duration-200"></span>
                   </Link>
                 ))}
               </div>

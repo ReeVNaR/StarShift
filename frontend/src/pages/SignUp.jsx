@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import api from '../services/api';
 
 const SignUp = () => {
   const [form, setForm] = useState({ username: "", email: "", password: "" });
@@ -18,8 +19,19 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post("http://localhost:5000/signup", form);
-    navigate("/signin");
+    try {
+      await api.auth.signUp(form);
+      // After successful signup, either:
+      // 1. Redirect to signin
+      navigate('/signin');
+      // or 2. Automatically sign them in
+      const response = await api.auth.signIn({ email: form.email, password: form.password });
+      localStorage.setItem("token", response.data.token);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error('Signup error:', error);
+      // Handle signup error (you might want to show an error message to the user)
+    }
   };
 
   return (

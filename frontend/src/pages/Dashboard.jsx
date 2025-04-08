@@ -5,6 +5,7 @@ import ProductGrid from "../components/ProductGrid";
 import Footer from "../components/Footer";
 import { useTheme } from "../context/ThemeContext";
 import LoadingSpinner from "../components/LoadingSpinner";
+import api from '../services/api';
 
 const Hero = lazy(() => import("../components/Hero"));
 
@@ -16,7 +17,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/products");
+        const response = await api.products.getAll();
         if (response.data.products && response.data.products.length > 0) {
           const shuffled = [...response.data.products].sort(() => 0.5 - Math.random());
           setProducts(shuffled.slice(0, 4));
@@ -59,11 +60,11 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="min-h-screen w-full bg-black overflow-hidden">
-      <Navbar />
+    <div className="w-full bg-black overflow-x-hidden">
+      <Navbar className="fixed top-0 left-0 right-0 z-50" />
       
-      {/* Hero Section - Responsive Height */}
-      <section className="min-h-screen w-full">
+      {/* Hero Section */}
+      <section className="h-screen w-full">
         <Suspense fallback={
           <div className="w-full h-full flex justify-center items-center">
             <LoadingSpinner />
@@ -73,9 +74,9 @@ const Dashboard = () => {
         </Suspense>
       </section>
       
-      {/* Features Section - Auto Height */}
-      <section className="bg-black flex flex-col">
-        <main className="flex-1 w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4">
+      {/* Features Section */}
+      <section className="h-[60vh] w-full bg-black">
+        <main className="h-full w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4 flex flex-col">
           <div className="mb-4 relative">
             <h2 className={`text-xl font-bold ${theme.text} animate-fade-in-down inline-block`}>
               Featured Products
@@ -85,15 +86,19 @@ const Dashboard = () => {
           </div>
           
           {loading ? (
-            <div className="flex justify-center items-center min-h-[200px]">
+            <div className="flex-1 flex justify-center items-center">
               <LoadingSpinner />
             </div>
           ) : (
-            <div className="min-h-[400px] lg:min-h-[500px]">
+            <div className="flex-1">
               <ProductGrid products={products} />
             </div>
           )}
         </main>
+      </section>
+
+      {/* Footer Section */}
+      <section className="h-[50vh] w-full bg-black">
         <Footer />
       </section>
     </div>
