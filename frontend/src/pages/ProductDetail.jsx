@@ -17,7 +17,6 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const [isAdding, setIsAdding] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState([]);
-  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     console.log('Attempting to fetch product with ID:', id);
@@ -42,45 +41,77 @@ const ProductDetail = () => {
     const styleSheet = document.createElement("style");
     styleSheet.textContent = `
       .product-image {
-        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
-        animation: glitchIn 0.5s ease-out forwards;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+        animation: glitchIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
       }
       .product-content {
-        animation: slideIn 0.7s ease-out forwards;
+        animation: slideIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
       }
       @keyframes glitchIn {
         0% { 
           opacity: 0;
           transform: scale(0.95) skew(2deg);
-          clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
         }
-        25% { 
+        20% { 
           opacity: 0.3;
-          transform: scale(0.97) skew(-2deg);
-          clip-path: polygon(0 5%, 100% 0, 100% calc(100% - 10px), calc(100% - 15px) 100%, 0 95%);
+          transform: scale(0.97) skew(-3deg);
+          clip-path: polygon(0 5%, 100% 0, 100% calc(100% - 15px), calc(100% - 25px) 100%, 0 95%);
+        }
+        40% {
+          clip-path: polygon(0 2%, 100% 0, 100% calc(100% - 25px), calc(100% - 15px) 100%, 0 98%);
         }
         100% { 
           opacity: 1;
           transform: scale(1) skew(0);
-          clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+          clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
         }
       }
       @keyframes slideIn {
-        from { opacity: 0; transform: translateX(20px) skew(-5deg); }
-        to { opacity: 1; transform: translateX(0) skew(0); }
+        from { 
+          opacity: 0; 
+          transform: translateX(30px) skew(-5deg);
+          filter: blur(10px);
+        }
+        to { 
+          opacity: 1; 
+          transform: translateX(0) skew(0);
+          filter: blur(0);
+        }
       }
       .rog-border {
         position: relative;
-        border: 1px solid rgba(255, 0, 0, 0.3);
+        border: 1px solid rgba(156, 163, 175, 0.3);
+        transition: all 0.3s ease;
+      }
+      .rog-border:hover {
+        border-color: rgba(156, 163, 175, 0.5);
+        box-shadow: 0 0 15px rgba(156, 163, 175, 0.2);
       }
       .rog-border::after {
         content: '';
         position: absolute;
         top: -1px;
         right: -1px;
-        width: 20px;
-        height: 20px;
-        background: linear-gradient(135deg, transparent 50%, #ff0000 50%);
+        width: 25px;
+        height: 25px;
+        background: linear-gradient(135deg, transparent 50%, rgba(156, 163, 175, 0.5) 50%);
+        transition: all 0.3s ease;
+      }
+      .rog-border:hover::after {
+        background: linear-gradient(135deg, transparent 50%, rgba(156, 163, 175, 0.8) 50%);
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.3);
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(156, 163, 175, 0.5);
+        border-radius: 3px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(156, 163, 175, 0.7);
       }
     `;
     document.head.appendChild(styleSheet);
@@ -89,27 +120,19 @@ const ProductDetail = () => {
 
   const fetchRelatedProducts = async () => {
     try {
-      const res = await api.products.getRelated(id);
-      return res.data.relatedProducts || [];
+      // Temporarily return empty array until API endpoint is implemented
+      return [];
+      // Once API is ready, uncomment below:
+      // const res = await api.products.getRelated(id);
+      // return res.data.relatedProducts || [];
     } catch (err) {
       console.error('Failed to fetch related products:', err);
       return [];
     }
   };
 
-  const fetchReviews = async () => {
-    try {
-      const res = await api.products.getReviews(id);
-      return res.data.reviews || [];
-    } catch (err) {
-      console.error('Failed to fetch reviews:', err);
-      return [];
-    }
-  };
-
   useEffect(() => {
     fetchRelatedProducts().then(setRelatedProducts);
-    fetchReviews().then(setReviews);
   }, [id]);
 
   const handleAddToCart = async () => {
@@ -141,9 +164,9 @@ const ProductDetail = () => {
         {/* Back Button - More Compact */}
         <button
           onClick={handleGoBack}
-          className="mb-2 flex items-center space-x-2 text-red-500 hover:text-red-400 
+          className="mb-2 flex items-center space-x-2 text-gray-400 hover:text-gray-300 
                    transition-all duration-300 group bg-black/30 px-3 py-1.5
-                   border border-red-500/20 hover:border-red-500/50 w-fit
+                   border border-gray-500/20 hover:border-gray-400/50 w-fit
                    skew-x-[-10deg]"
         >
           <svg
@@ -163,7 +186,7 @@ const ProductDetail = () => {
           </div>
         ) : error ? (
           <div className="flex-1 flex justify-center items-center">
-            <div className="text-red-400 text-center p-4 bg-black/50 rounded-lg backdrop-blur-sm">
+            <div className="text-gray-400 text-center p-4 bg-black/50 rounded-lg backdrop-blur-sm">
               {error}
               <button
                 onClick={() => navigate('/products')}
@@ -175,26 +198,13 @@ const ProductDetail = () => {
           </div>
         ) : (
           <div className="flex-1 grid md:grid-cols-2 gap-6 py-2 overflow-hidden">
-            {/* Left column - Images */}
-            <div className="space-y-3 overflow-y-auto custom-scrollbar pr-2">
-              <div className="overflow-hidden product-image rog-border">
-                <img
-                  src={product?.image}
-                  alt={product?.name}
-                  className="w-full aspect-square object-cover hover:scale-105 transition-transform duration-700"
-                />
-              </div>
-              <div className="grid grid-cols-4 gap-2 image-gallery">
-                {[1, 2, 3, 4].map((_, index) => (
-                  <div key={index} className="overflow-hidden rog-border">
-                    <img 
-                      src={product?.image} 
-                      alt="" 
-                      className="w-full aspect-square object-cover hover:scale-110 transition-transform duration-300" 
-                    />
-                  </div>
-                ))}
-              </div>
+            {/* Left column - Image */}
+            <div className="overflow-hidden product-image rog-border">
+              <img
+                src={product?.image}
+                alt={product?.name}
+                className="w-full aspect-square object-cover hover:scale-105 transition-transform duration-700"
+              />
             </div>
 
             {/* Right column - Product Info */}
@@ -203,25 +213,25 @@ const ProductDetail = () => {
                 <h1 className="text-2xl font-bold text-white font-orbitron mb-2 uppercase">
                   {product?.name}
                 </h1>
-                <p className="text-3xl font-bold text-red-500">${product?.price?.toFixed(2)}</p>
+                <p className="text-3xl font-bold text-gray-400">₹{product?.price?.toFixed(2)}</p>
               </div>
               <div className="space-y-3">
                 <div className="bg-black/50 p-4 rog-border backdrop-blur-sm">
-                  <h3 className="text-red-500 font-semibold mb-2 font-orbitron">DESCRIPTION</h3>
+                  <h3 className="text-gray-400 font-semibold mb-2 font-orbitron">DESCRIPTION</h3>
                   <p className="text-gray-300 text-sm">{product?.description}</p>
                 </div>
                 
                 <div className="bg-black/50 p-4 rog-border backdrop-blur-sm">
-                  <h3 className="text-red-500 font-semibold mb-2 font-orbitron">CATEGORY</h3>
+                  <h3 className="text-gray-400 font-semibold mb-2 font-orbitron">CATEGORY</h3>
                   <p className="text-gray-300 uppercase text-sm">{product?.category}</p>
                 </div>
                 <button
                   onClick={handleAddToCart}
                   disabled={isAdding}
                   className={`w-full py-3 px-6 font-orbitron tracking-wider
-                            bg-red-500/20 hover:bg-red-500/30
-                            border border-red-500/50 hover:border-red-400
-                            text-red-500 hover:text-red-400
+                            bg-gray-500/20 hover:bg-gray-500/30
+                            border border-gray-500/50 hover:border-gray-400
+                            text-gray-400 hover:text-gray-300
                             transition-all duration-300
                             skew-x-[-5deg]
                             disabled:opacity-50 disabled:cursor-not-allowed
@@ -249,47 +259,42 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* Customer Reviews Section */}
-            <div className="mt-16">
-              <h2 className="text-3xl font-bold text-white mb-8 text-center">Customer Reviews</h2>
-              <div className="space-y-6">
-                {reviews.length > 0 ? (
-                  reviews.map((review) => (
-                    <div key={review.id} className="bg-black/50 p-4 rounded-lg shadow-md border border-emerald-500/20 hover:border-emerald-500/50 transition-all duration-300">
-                      <h3 className="text-lg font-semibold text-white">{review.username}</h3>
-                      <p className="text-gray-300">{review.comment}</p>
-                      <p className="text-emerald-400 text-sm">Rating: {review.rating}/5</p>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-gray-400 text-center">No reviews yet. Be the first to review this product!</p>
-                )}
-              </div>
-            </div>
-
             {/* Related Products Section */}
-            <div className="mt-16">
-              <h2 className="text-3xl font-bold text-white mb-8 text-center">Related Products</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {relatedProducts.map((relatedProduct) => (
-                  <div key={relatedProduct.id} className="bg-black/50 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <img 
-                      src={relatedProduct.image} 
-                      alt={relatedProduct.name} 
-                      className="w-full h-40 object-cover rounded-lg mb-4"
-                    />
-                    <h3 className="text-lg font-semibold text-white">{relatedProduct.name}</h3>
-                    <p className="text-emerald-400">${relatedProduct.price.toFixed(2)}</p>
-                    <button 
-                      onClick={() => navigate(`/products/${relatedProduct.id}`)}
-                      className="mt-4 w-full py-2 text-sm text-emerald-400 border border-emerald-500/20 rounded-lg hover:border-emerald-500/50 transition-all duration-300"
+            {relatedProducts.length > 0 && (
+              <div className="md:col-span-2 mt-8">
+                <h2 className="text-xl font-bold text-gray-400 font-orbitron mb-6 border-b border-gray-500/30 pb-2">
+                  RELATED PRODUCTS
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {relatedProducts.map((relatedProduct) => (
+                    <div 
+                      key={relatedProduct.id} 
+                      className="rog-border bg-black/40 backdrop-blur-sm hover:transform hover:scale-105 transition-all duration-300"
                     >
-                      View Details
-                    </button>
-                  </div>
-                ))}
+                      <div className="aspect-square overflow-hidden">
+                        <img 
+                          src={relatedProduct.image} 
+                          alt={relatedProduct.name} 
+                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                        />
+                      </div>
+                      <div className="p-4">
+                        <h3 className="text-white font-orbitron text-sm">{relatedProduct.name}</h3>
+                        <p className="text-gray-400 font-bold mt-2">₹{relatedProduct.price.toFixed(2)}</p>
+                        <button 
+                          onClick={() => navigate(`/products/${relatedProduct.id}`)}
+                          className="mt-3 w-full py-2 text-sm text-gray-400 border border-gray-500/30 
+                                   hover:border-gray-400/70 transition-all duration-300 
+                                   hover:bg-gray-500/10 font-orbitron tracking-wide"
+                        >
+                          VIEW DETAILS
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>

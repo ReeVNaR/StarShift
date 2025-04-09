@@ -58,7 +58,7 @@ const SignUp = () => {
              style={{ animation: "fadeInUp 1s ease-out" }}>
           <div className="flex flex-col items-center space-y-6 mb-12">
             <div className="flex items-center">
-              <div className="w-12 lg:w-16 h-1 bg-emerald-500 rounded mr-4"
+              <div className="w-12 lg:w-16 h-1 bg-gray-500 rounded mr-4"
                    style={{ animation: "glowPulse 2s ease-in-out infinite" }}></div>
               <Link to="/" className="cursor-pointer hover:scale-105 transition-transform duration-300">
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white font-orbitron tracking-wider text-center" 
@@ -66,10 +66,10 @@ const SignUp = () => {
                   STARSHIFT
                 </h1>
               </Link>
-              <div className="w-12 lg:w-16 h-1 bg-emerald-500 rounded ml-4"
+              <div className="w-12 lg:w-16 h-1 bg-gray-500 rounded ml-4"
                    style={{ animation: "glowPulse 2s ease-in-out infinite" }}></div>
             </div>
-            <h2 className="text-2xl lg:text-3xl text-emerald-400 font-orbitron tracking-wide text-center"
+            <h2 className="text-2xl lg:text-3xl text-gray-400 font-orbitron tracking-wide text-center"
                 style={{ animation: "slideIn 1s ease-out" }}>
               Premium Gaming Gear
             </h2>
@@ -100,19 +100,19 @@ const SignUp = () => {
             <input
               type="text"
               placeholder="Username"
-              className="w-full mb-4 p-4 rounded-lg bg-black/60 backdrop-blur-md border-2 border-[rgb(21,128,61)]/20 text-white placeholder-gray-400 focus:outline-none focus:border-[rgb(34,197,94)]/40 focus:ring-2 focus:ring-[rgb(21,128,61)]/10 transition-all duration-300"
+              className="w-full mb-4 p-4 rounded-lg bg-black/60 backdrop-blur-md border-2 border-gray-500/20 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400/40 focus:ring-2 focus:ring-gray-500/10 transition-all duration-300"
               onChange={(e) => setForm({ ...form, username: e.target.value })}
             />
             <input
               type="email"
               placeholder="Email"
-              className="w-full mb-4 p-4 rounded-lg bg-black/60 backdrop-blur-md border-2 border-[rgb(21,128,61)]/20 text-white placeholder-gray-400 focus:outline-none focus:border-[rgb(34,197,94)]/40 focus:ring-2 focus:ring-[rgb(21,128,61)]/10 transition-all duration-300"
+              className="w-full mb-4 p-4 rounded-lg bg-black/60 backdrop-blur-md border-2 border-gray-500/20 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400/40 focus:ring-2 focus:ring-gray-500/10 transition-all duration-300"
               onChange={(e) => setForm({ ...form, email: e.target.value })}
             />
             <input
               type="password"
               placeholder="Password"
-              className="w-full mb-6 p-4 rounded-lg bg-black/60 backdrop-blur-md border-2 border-[rgb(21,128,61)]/20 text-white placeholder-gray-400 focus:outline-none focus:border-[rgb(34,197,94)]/40 focus:ring-2 focus:ring-[rgb(21,128,61)]/10 transition-all duration-300"
+              className="w-full mb-6 p-4 rounded-lg bg-black/60 backdrop-blur-md border-2 border-gray-500/20 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400/40 focus:ring-2 focus:ring-gray-500/10 transition-all duration-300"
               onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
             <button 
@@ -139,7 +139,7 @@ const SignUp = () => {
             </button>
             <p className="mt-10 text-center text-gray-400 font-orbitron">
               Already have an account?{" "}
-              <a href="/signin" className="text-[rgb(46,69,144)] hover:text-[rgb(132,204,22)] font-medium transition-all duration-300 hover:underline animate-random-text">
+              <a href="/signin" className="text-gray-500 hover:text-gray-300 font-medium transition-all duration-300 hover:underline animate-random-text">
                 Sign In
               </a>
             </p>

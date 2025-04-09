@@ -74,7 +74,7 @@ export default function ProductCard({ product, onDelete, onUpdate }) {
           <>
             <div className="mb-3">
               <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
-              <p className="text-blue-600 font-bold mt-1">${product.price.toFixed(2)}</p>
+              <p className="text-blue-600 font-bold mt-1">₹{product.price.toFixed(2)}</p>
             </div>
             <p className="text-gray-600 text-sm mb-3">{product.description}</p>
             <div className="inline-block px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">

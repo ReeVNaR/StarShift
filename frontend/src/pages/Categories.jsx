@@ -129,7 +129,7 @@ const Categories = () => {
                           {product.name}
                         </h3>
                         <p className="mt-2 text-xl font-bold text-gray-600">
-                          ${product.price.toFixed(2)}
+                          ₹{product.price.toFixed(2)}
                         </p>
                         <div className="relative mt-4">
                           <button 

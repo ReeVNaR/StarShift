@@ -173,7 +173,7 @@ const Products = () => {
                       {product.name}
                     </h3>
                     <p className="mt-2 text-2xl font-bold text-gray-500">
-                      ${product.price.toFixed(2)}
+                      ₹{product.price.toFixed(2)}
                     </p>
                     <button 
                       onClick={(e) => handleAddToCart(e, product._id)}

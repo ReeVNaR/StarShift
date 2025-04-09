@@ -152,7 +152,7 @@ const ProductGrid = ({ products }) => {
                         </p>
                         <div className="flex items-center justify-between mt-auto">
                           <span className="text-xl font-bold text-white font-orbitron transform transition-all duration-300 group-hover:scale-110 group-hover:translate-x-2">
-                            ${product.price.toFixed(2)}
+                            ₹{product.price.toFixed(2)}
                           </span>
                           <Link 
                             to={`/product/${product._id}`}

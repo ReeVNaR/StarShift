@@ -165,8 +165,8 @@ const SignIn = () => {
         50% { opacity: 0.85; }
       }
       @keyframes glowPulse {
-        0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
-        50% { opacity: 0.8; box-shadow: 0 0 20px rgba(16, 185, 129, 0.8); }
+        0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(75, 85, 99, 0.5); }
+        50% { opacity: 0.8; box-shadow: 0 0 20px rgba(75, 85, 99, 0.8); }
       }
       @keyframes textGlow {
         0%, 100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
@@ -191,8 +191,8 @@ const SignIn = () => {
         }
       }
       @keyframes cyberGlow {
-        0%, 100% { text-shadow: 0 0 10px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.4); }
-        50% { text-shadow: 0 0 15px rgba(16, 185, 129, 0.9), 0 0 30px rgba(16, 185, 129, 0.6); }
+        0%, 100% { text-shadow: 0 0 10px rgba(75, 85, 99, 0.7), 0 0 20px rgba(75, 85, 99, 0.4); }
+        50% { text-shadow: 0 0 15px rgba(75, 85, 99, 0.9), 0 0 30px rgba(75, 85, 99, 0.6); }
       }
 
       @keyframes textShine {
@@ -207,7 +207,7 @@ const SignIn = () => {
       .feature-title:hover {
         animation: cyberGlow 2s infinite;
         letter-spacing: 0.15em;
-        background: linear-gradient(90deg, #10b981, #34d399, #10b981);
+        background: linear-gradient(90deg, #4B5563, #6B7280, #4B5563);
         background-size: 200% auto;
         background-clip: text;
         -webkit-background-clip: text;
@@ -222,7 +222,7 @@ const SignIn = () => {
 
       .feature-description:hover {
         color: #ffffff;
-        text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+        text-shadow: 0 0 8px rgba(75, 85, 99, 0.5);
         transform: translateY(-2px);
       }
 
@@ -232,9 +232,9 @@ const SignIn = () => {
       }
 
       .grid-item:hover {
-        background: rgba(16, 185, 129, 0.1);
+        background: rgba(75, 85, 99, 0.1);
         border-radius: 0.5rem;
-        box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        box-shadow: 0 0 20px rgba(75, 85, 99, 0.2);
       }
 
       .feature-description::after {
@@ -244,7 +244,7 @@ const SignIn = () => {
         height: 2px;
         bottom: -4px;
         left: 50%;
-        background: linear-gradient(90deg, transparent, #10b981, transparent);
+        background: linear-gradient(90deg, transparent, #4B5563, transparent);
         transition: all 0.3s ease;
       }
 
@@ -298,7 +298,7 @@ const SignIn = () => {
              style={{ animation: "fadeInUp 1s ease-out" }}>
           <div className="flex flex-col items-center space-y-4 sm:space-y-6 mb-8 sm:mb-12">
             <div className="flex items-center">
-              <div className="w-12 lg:w-16 h-1 bg-emerald-500 rounded mr-4"
+              <div className="w-12 lg:w-16 h-1 bg-gray-500 rounded mr-4"
              style={{ animation: "glowPulse 2s ease-in-out infinite" }}></div>
               <Link to="/" className="cursor-pointer hover:scale-105 transition-transform duration-300">
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white font-orbitron tracking-wider text-center" 
@@ -308,10 +308,10 @@ const SignIn = () => {
                   STARSHIFT
                 </h1>
               </Link>
-              <div className="w-12 lg:w-16 h-1 bg-emerald-500 rounded ml-4"
+              <div className="w-12 lg:w-16 h-1 bg-gray-500 rounded ml-4"
              style={{ animation: "glowPulse 2s ease-in-out infinite" }}></div>
             </div>
-            <h2 className="text-xl sm:text-2xl lg:text-3xl text-emerald-400 font-orbitron tracking-wide text-center"
+            <h2 className="text-xl sm:text-2xl lg:text-3xl text-gray-400 font-orbitron tracking-wide text-center"
                 style={{ animation: "slideIn 1s ease-out" }}>
               Premium Gaming Gear
             </h2>
@@ -320,22 +320,22 @@ const SignIn = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 w-full max-w-xl mx-auto px-2 sm:px-0">
             <Link to="/products" className="text-center grid-item hover:scale-105 transition-transform duration-300 cursor-pointer"
            style={{ animation: "fadeInRotate 0.6s ease-out forwards", animationDelay: "0.2s" }}>
-              <div className="text-emerald-500 text-lg lg:text-xl mb-2 tracking-wider feature-title">MOUSEPADS</div>
+              <div className="text-gray-500 text-lg lg:text-xl mb-2 tracking-wider feature-title">MOUSEPADS</div>
               <div className="text-gray-400 text-sm lg:text-base leading-relaxed feature-description">Pro-Grade Precision</div>
             </Link>
             <Link to="/products" className="text-center grid-item hover:scale-105 transition-transform duration-300 cursor-pointer"
            style={{ animation: "fadeInRotate 0.6s ease-out forwards", animationDelay: "0.4s" }}>
-              <div className="text-emerald-500 text-lg lg:text-xl mb-2 tracking-wider feature-title">ACCESSORIES</div>
+              <div className="text-gray-500 text-lg lg:text-xl mb-2 tracking-wider feature-title">ACCESSORIES</div>
               <div className="text-gray-400 text-sm lg:text-base leading-relaxed feature-description">Custom Design</div>
             </Link>
-            <Link to="/about" className="text-center grid-item hover:scale-105 transition-transform duration-300 cursor-pointer"
+            <Link to="/categories" className="text-center grid-item hover:scale-105 transition-transform duration-300 cursor-pointer"
            style={{ animation: "fadeInRotate 0.6s ease-out forwards", animationDelay: "0.6s" }}>
-              <div className="text-emerald-500 text-lg lg:text-xl mb-2 tracking-wider feature-title">QUALITY</div>
+              <div className="text-gray-500 text-lg lg:text-xl mb-2 tracking-wider feature-title">QUALITY</div>
               <div className="text-gray-400 text-sm lg:text-base leading-relaxed feature-description">Premium Build</div>
             </Link>
-            <Link to="/about" className="text-center grid-item hover:scale-105 transition-transform duration-300 cursor-pointer"
+            <Link to="/categories" className="text-center grid-item hover:scale-105 transition-transform duration-300 cursor-pointer"
            style={{ animation: "fadeInRotate 0.6s ease-out forwards", animationDelay: "0.8s" }}>
-              <div className="text-emerald-500 text-lg lg:text-xl mb-2 tracking-wider feature-title">DESIGN</div>
+              <div className="text-gray-500 text-lg lg:text-xl mb-2 tracking-wider feature-title">DESIGN</div>
               <div className="text-gray-400 text-sm lg:text-base leading-relaxed feature-description">Future-Ready</div>
             </Link>
           </div>
@@ -350,13 +350,13 @@ const SignIn = () => {
             <input
               type="email"
               placeholder="Email"
-              className="w-full mb-4 p-4 rounded-lg bg-black/60 backdrop-blur-md border-2 border-[rgb(21,128,61)]/20 text-white placeholder-gray-400 focus:outline-none focus:border-[rgb(34,197,94)]/40 focus:ring-2 focus:ring-[rgb(21,128,61)]/10 transition-all duration-300"
+              className="w-full mb-4 p-4 rounded-lg bg-black/60 backdrop-blur-md border-2 border-gray-500/20 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400/40 focus:ring-2 focus:ring-gray-500/10 transition-all duration-300"
               onChange={(e) => setForm({ ...form, email: e.target.value })}
             />
             <input
               type="password"
               placeholder="Password"
-              className="w-full mb-6 p-4 rounded-lg bg-black/60 backdrop-blur-md border-2 border-[rgb(21,128,61)]/20 text-white placeholder-gray-400 focus:outline-none focus:border-[rgb(34,197,94)]/40 focus:ring-2 focus:ring-[rgb(21,128,61)]/10 transition-all duration-300"
+              className="w-full mb-6 p-4 rounded-lg bg-black/60 backdrop-blur-md border-2 border-gray-500/20 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400/40 focus:ring-2 focus:ring-gray-500/10 transition-all duration-300"
               onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
             <button className="shop-now-button w-full p-4 rounded-lg text-white font-bold font-orbitron tracking-wider transition-all duration-300 mt-2">
@@ -369,7 +369,7 @@ const SignIn = () => {
             )}
             <p className="mt-10 text-center text-gray-400 font-orbitron">
               Don't have an account?{" "}
-              <a href="/signup" className="text-[rgb(46,69,144)] hover:text-[rgb(132,204,22)] font-medium transition-all duration-300 hover:underline animate-random-text">
+              <a href="/signup" className="text-gray-500 hover:text-gray-300 font-medium transition-all duration-300 hover:underline animate-random-text">
                 Sign Up
               </a>
             </p>

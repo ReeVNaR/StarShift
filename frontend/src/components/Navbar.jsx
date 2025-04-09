@@ -74,7 +74,7 @@ const Navbar = () => {
                     <span className="text-gray-300 group-hover:text-white transition-all duration-200">
                       {link.name}
                     </span>
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald-500 group-hover:w-full transition-all duration-200"></span>
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-200 shadow-[0_0_10px_#fff,0_0_20px_#fff] opacity-80"></span>
                   </Link>
                 ))}
               </div>
@@ -105,7 +105,7 @@ const Navbar = () => {
                       <span className="text-gray-300 group-hover:text-white transition-all duration-200">
                         {item}
                       </span>
-                      <span className="absolute bottom-0 left-2 right-2 h-[2px] bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 shadow-glow opacity-75"></span>
+                      <span className="absolute bottom-0 left-2 right-2 h-[2px] bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 shadow-[0_0_10px_#fff,0_0_20px_#fff] opacity-80"></span>
                     </Link>
                   ))}
                 </div>

@@ -98,7 +98,7 @@ const Dashboard = () => {
       </section>
 
       {/* Footer Section */}
-      <section className="h-[50vh] w-full bg-black">
+      <section className="w-full bg-black">
         <Footer />
       </section>
     </div>

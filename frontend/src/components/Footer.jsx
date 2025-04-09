@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const SocialIcon = ({ href, children }) => (
   <a href={href} className="footer-icon-link group" target="_blank" rel="noopener noreferrer">
     <div className="relative">
-      <div className="w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-300 group-hover:scale-105">
+      <div className="w-6 h-6 flex items-center justify-center rounded-lg transition-all duration-300 group-hover:scale-105">
         {children}
       </div>
     </div>
@@ -31,24 +31,24 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="w-full z-40 transition-all duration-300 ease-in-out mt-auto" 
+    <footer className="w-full z-40 transition-all duration-300 ease-in-out" 
       style={{
         background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.3))',
         backdropFilter: 'blur(16px)',
         borderTop: '1px solid rgba(255, 255, 255, 0.1)',
         boxShadow: '0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 80px rgba(255, 255, 255, 0.05)'
       }}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 lg:px-6 py-4">
         {/* Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
           {/* Brand Section */}
-          <div className="space-y-4">
+          <div className="space-y-1">
             <Link to="/" className="inline-block group">
-              <span className="animate-random-text font-bold text-xl tracking-wider font-orbitron">
-                STAR<span className="text-emerald-400">SHIFT</span>
+              <span className="animate-random-text font-bold text-lg tracking-wider font-orbitron">
+                STAR<span className="text-gray-400">SHIFT</span>
               </span>
             </Link>
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-400 text-xs">
               Premium Gaming Gear for the Future
             </p>
           </div>
@@ -56,13 +56,13 @@ const Footer = () => {
           {/* Navigation Sections */}
           {navigationLinks.map((section) => (
             <div key={section.title}>
-              <h3 className="text-emerald-400 font-orbitron mb-4">{section.title}</h3>
-              <ul className="space-y-2">
+              <h3 className="text-gray-400 font-orbitron mb-1 text-sm">{section.title}</h3>
+              <ul className="space-y-0.5">
                 {section.items.map((item) => (
                   <li key={item.name}>
                     <Link
                       to={item.link}
-                      className="text-gray-400 hover:text-emerald-400 text-sm transition-colors duration-200"
+                      className="text-gray-400 hover:text-gray-300 text-xs transition-colors duration-200"
                     >
                       {item.name}
                     </Link>
@@ -74,12 +74,12 @@ const Footer = () => {
         </div>
 
         {/* Social Links & Copyright */}
-        <div className="mt-12 pt-8 border-t border-white/5">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="mt-4 pt-2 border-t border-white/5">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-2">
             <div className="text-gray-500 text-xs">
               © {new Date().getFullYear()} StarShift. All rights reserved.
             </div>
-            <div className="flex space-x-6">
+            <div className="flex space-x-4">
               <SocialIcon href="https://twitter.com">
                 <svg className="w-5 h-5 animate-random-text" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>

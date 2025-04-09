@@ -93,10 +93,10 @@ const Cart = () => {
                       </h3>
                     </Link>
                     <p className="text-gray-500 mt-1 font-mono">
-                      ${item.productId.price.toFixed(2)} × {item.quantity}
+                      ₹{item.productId.price.toFixed(2)} × {item.quantity}
                     </p>
                     <p className="text-gray-400 mt-1 font-mono">
-                      Subtotal: ${(item.productId.price * item.quantity).toFixed(2)}
+                      Subtotal: ₹{(item.productId.price * item.quantity).toFixed(2)}
                     </p>
                   </div>
                   <button
@@ -112,7 +112,7 @@ const Cart = () => {
             <div className="bg-black/80 p-6 mt-4 border-l-4 border-gray-600 clip-path-polygon">
               <div className="flex justify-between items-center mb-4">
                 <span className="text-white font-orbitron">TOTAL:</span>
-                <span className="text-2xl font-bold text-gray-500 font-mono">${total.toFixed(2)}</span>
+                <span className="text-2xl font-bold text-gray-500 font-mono">₹{total.toFixed(2)}</span>
               </div>
               <button className="w-full px-8 py-3 bg-gray-600 text-white font-bold hover:bg-gray-700 transition-all transform hover:scale-105 skew-x-[-5deg] relative overflow-hidden before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-700">
                 PROCEED TO CHECKOUT
