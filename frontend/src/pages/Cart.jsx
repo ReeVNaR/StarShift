@@ -114,7 +114,9 @@ const Cart = () => {
                 <span className="text-white font-orbitron">TOTAL:</span>
                 <span className="text-2xl font-bold text-gray-500 font-mono">₹{total.toFixed(2)}</span>
               </div>
-              <button className="w-full px-8 py-3 bg-gray-600 text-white font-bold hover:bg-gray-700 transition-all transform hover:scale-105 skew-x-[-5deg] relative overflow-hidden before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-700">
+              <button 
+                onClick={() => navigate('/checkout')}
+                className="w-full px-8 py-3 bg-gray-600 text-white font-bold hover:bg-gray-700 transition-all transform hover:scale-105 skew-x-[-5deg] relative overflow-hidden before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-700">
                 PROCEED TO CHECKOUT
               </button>
             </div>
